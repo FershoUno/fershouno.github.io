@@ -1,0 +1,136 @@
+[
+  {
+    "enabled": true,
+    "company": "Trabajo Independiente",
+    "position": "Administrador de Infraestructura VPS y Soporte Técnico",
+    "from": "2023",
+    "to": "2024",
+    "summary": "Implementación, administración y optimización de infraestructura VPS basada en Linux, brindando soporte técnico a clientes y mantenimiento de servicios.",
+    "technologies": [
+      "Linux",
+      "Debian",
+      "Ubuntu",
+      "Docker",
+      "LXC/LXD",
+      "Nginx",
+      "Apache",
+      "Bash",
+      "Python",
+      "WireGuard"
+    ],
+    "responsibilities": [
+      "Implementación y gestión de infraestructura VPS",
+      "Administración y mantenimiento de servidores Linux",
+      "Optimización de rendimiento de servidores y servicios",
+      "Soporte técnico a clientes",
+      "Monitoreo y resolución de incidencias",
+      "Gestión de contenedores y servicios virtualizados"
+    ],
+    "implementations": [
+      "Despliegue de servicios web utilizando Nginx y Apache",
+      "Implementación de VPN mediante WireGuard",
+      "Automatización de tareas administrativas mediante Bash y Python",
+      "Configuración de entornos basados en contenedores Docker y LXC/LXD"
+    ],
+    "achievements": [
+      "Mejora del rendimiento y estabilidad de servicios desplegados en VPS",
+      "Implementación de soluciones de automatización para tareas recurrentes",
+      "Soporte y mantenimiento continuo de infraestructura Linux"
+    ],
+    "gallery": []
+  },
+  {
+    "enabled": true,
+    "company": "Open IT (Software Libre - Soluciones y Servicios)",
+    "position": "Pasantía - Testing, Documentación y Desarrollo de PluriOS GNU/Linux",
+    "from": "2021",
+    "to": "2021",
+    "summary": "Participación en actividades de testing, documentación técnica y desarrollo relacionadas con la distribución PluriOS GNU/Linux.",
+    "technologies": [
+      "Linux",
+      "Ubuntu",
+      "Debian",
+      "Bash",
+      "Git",
+      "Markdown"
+    ],
+    "responsibilities": [
+      "Ejecución de pruebas funcionales y validación de componentes del sistema",
+      "Documentación de procedimientos técnicos y manuales de uso",
+      "Reporte y seguimiento de incidencias detectadas durante el proceso de pruebas",
+      "Apoyo en el desarrollo y mantenimiento de componentes del proyecto"
+    ],
+    "implementations": [
+      "Elaboración de documentación técnica para usuarios y colaboradores",
+      "Pruebas de compatibilidad de software y hardware",
+      "Apoyo en tareas de personalización y mantenimiento de la distribución"
+    ],
+    "achievements": [
+      "Contribución a la mejora de la documentación del proyecto",
+      "Participación en procesos de validación y aseguramiento de calidad del sistema"
+    ],
+    "gallery": []
+  },
+  {
+    "enabled": true,
+    "company": "Open IT (Software Libre - Soluciones y Servicios)",
+    "position": "Pasantía - Documentación e Implementación de OpenWrt",
+    "from": "2020",
+    "to": "2020",
+    "summary": "Participación en tareas de documentación, compilación de imágenes personalizadas, testing e implementación de soluciones basadas en OpenWrt.",
+    "technologies": [
+      "Linux",
+      "OpenWrt",
+      "Networking",
+      "Bash",
+      "Git"
+    ],
+    "responsibilities": [
+      "Documentación técnica relacionada con OpenWrt",
+      "Generación y personalización de imágenes compiladas de OpenWrt",
+      "Pruebas y validación de configuraciones y paquetes",
+      "Apoyo en la implementación de soluciones basadas en OpenWrt"
+    ],
+    "implementations": [
+      "Compilación de imágenes personalizadas para distintos escenarios de uso",
+      "Documentación de procedimientos de instalación y configuración",
+      "Pruebas de funcionamiento en equipos y entornos de laboratorio"
+    ],
+    "achievements": [
+      "Generación de documentación técnica para facilitar la implementación de OpenWrt",
+      "Participación en pruebas y validación de configuraciones de red"
+    ],
+    "gallery": []
+  },
+  {
+    "enabled": true,
+    "company": "AGETIC",
+    "position": "Pasantía - Capacitación y Soporte Técnico",
+    "from": "2019",
+    "to": "2019",
+    "summary": "Participación en actividades de capacitación y soporte técnico relacionadas con tecnologías FOSS y TIC dirigidas a instituciones educativas.",
+    "technologies": [
+      "Linux",
+      "Software Libre",
+      "TIC",
+      "Ofimática",
+      "Redes"
+    ],
+    "responsibilities": [
+      "Capacitación en el uso de tecnologías FOSS y TIC",
+      "Soporte técnico al equipo de trabajo",
+      "Asistencia técnica a docentes y personal educativo",
+      "Apoyo en actividades de implementación tecnológica"
+    ],
+    "implementations": [
+      "Capacitación a usuarios sobre herramientas de software libre",
+      "Asistencia en la resolución de incidencias técnicas",
+      "Apoyo en actividades de adopción tecnológica en entornos educativos"
+    ],
+    "achievements": [
+      "Participación en actividades de formación tecnológica",
+      "Apoyo técnico a equipos de trabajo y centros educativos"
+    ],
+    "gallery": []
+  }
+]

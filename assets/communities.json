@@ -1,0 +1,136 @@
+[
+  {
+    "enabled": true,
+    "name": "Nucleo Linux Bolivia",
+    "logo": "",
+    "description": "Es una comunidad que se dedica a la investigación y promoción de tecnologías de código abierto, especialmente aquellas relacionadas con Linux y el software libre. El objetivo es crear una comunidad activa que comparta conocimientos y experiencias en el fascinante mundo de las tecnologías FOSS (Free and Open Source Software).",
+    "from": "2019",
+    "to": "Actualidad",
+    "activities": [
+      {
+        "year": "2019",
+        "title": "FLISOL SANTA CRUZ 2019",
+        "description": "Participe brindando charlas Pre-FLISOL ne la Facultad de Ingenieria en Ciencias de la Computación y Telecomunicaciones enfocado a routers, redes y seguridad, brindando una opción practica sobre utilizar OpenWRT con la implementación de un AdBlock para bloquear los anuncios a nivel de red."
+      },
+      {
+        "year": "2020",
+        "title": "FLISOL 2020",
+        "description": "Participe como parte de la Organización a nivel Nacional del Festival Latinoamericano de Instalacion de Software Libre en Bolivia. Coordinacion de voluntarios, talleres y logistica del evento."
+      },
+      {
+        "year": "2020",
+        "title": "Taller: Básico de Linux Containers (LXC)",
+        "description": "Este taller tiene como objetivo aprender a utilizar contenedores para realizar despliegues prácticos y aprovechar al máximo el potencial de Linux sobre una infraestructura basada en contenedores."
+      },
+      {
+        "year": "2021",
+        "title": "FLISOL BOLIVIA",
+        "description": "Participe como parte de la Organización a nivel Nacional del Festival Latinoamericano de Instalacion de Software Libre en Bolivia. Coordinacion de voluntarios, talleres y logistica del evento."
+      },
+      {
+        "year": "2022",
+        "title": "FLISOL BOLIVIA",
+        "description": "Participe como parte de la Organización a nivel Nacional del Festival Latinoamericano de Instalacion de Software Libre en Bolivia. Coordinacion de voluntarios, talleres y logistica del evento y tallerista sobre Personalización de Slax Linux."
+      },
+      {
+        "year": "2023",
+        "title": "FLISOL Santa Cruz - Charla: kiwix el navegador Offline",
+        "description": "Mi participación en esta actividad fue la difusión, promoción del proyecto de kiwix que puede ser de mucha utilidad en zona rurales o lugares donde carecen del acceso a internet/información. Tambien participe como parte de la organización del evento."
+      },
+      {
+        "year": "2023",
+        "title": "Workshop: Introducción a GIT",
+        "description": "Mi participación en esta actividad se centra en la capacitación del uso de GIT como uso personal, profesional y como contribuidor de proyectos, como resultado, el espligue de una pagina web desde la plataforma de GitHub Pages."
+      },
+      {
+        "year": "2024",
+        "title": "Taller: Mi primer laboratorio de Hacking",
+        "description": "El objetivo de este taller es aprender a implementar un entorno seguro para realizar pruebas de Hacking sin comprometer infraestructura de terceros o romper con los aspectos legales aplicando las buenas practicas."
+      },
+      {
+        "year": "2024",
+        "title": "Taller: Hacking WordPress",
+        "description": "El objetivo de este taller es aprender a descubrir posibles vectores de ataque y desarrollar una herramienta quenos permita aprovecharlo, al mismo tiempo comprender el problema y aplicar mitigaciones."
+      }
+    ]
+  },
+  {
+    "enabled": true,
+    "name": "Nucleo Linux UAGRM",
+    "logo": "",
+    "description": "Grupo de investigación en tecnologias FOSS de la Facultad en Ciencias de la Computación y Telecomunicaciones",
+    "from": "2019",
+    "to": "Actualidad",
+    "activities": [
+      {
+        "year": "2019",
+        "title": "Introducción a GNU/Linux y la comunidad Nucleo Linux UAGRM",
+        "description": "Charla enfocada a explicar sobre Linux, su historia y como funciona Linux en el ordenador y el reclutamiento de miembros."
+      },
+      {
+        "year": "2019",
+        "title": "Atacando a un Ubuntu Server",
+        "description": "Charla con demostración sobre como es posible realizar ataques a un servidor Linux (Ubuntu) dentro de una red controlada"
+      },
+      {
+        "year": "2019",
+        "title": "POS-FLISOL",
+        "description": "Actividad para brindar soporte a los nuevos usuarios de Linux que se animaron a instalarse una distribución GNU/Linux en el evento del FLISOL."
+      },
+      {
+        "year": "2019",
+        "title": "InstallFest en la FICCT",
+        "description": "Este evento tiene como objetivo apoyar con la instalación de la distribución Fedora y las herramientas necesarias para el avance academico para docentes que usan este sistema en sus clases, donde la parte esencial fue desarrollar una herramienta que permita descargar e instalar paquetes de manera offline."
+      },
+      {
+        "year": "2023",
+        "title": "Taller: Crea tu blog con WordPress + Docker (Self-Host)",
+        "description": "Este taller tiene como objetivo enseñar como implementar un Blog con WordPress y Docker en un servidor Linux."
+      },
+      {
+        "year": "2024",
+        "title": "Taller: Privacidad Digital y Seguridad en Linea",
+        "description": "Taller sobre herramientas de privacidad digital, navegacion segura, gestion de contrasenas y proteccion de datos personales."
+      },
+      {
+        "year": "2019",
+        "title": "Introducción a GNU/Linux",
+        "description": "Contribucion a la traduccion al espanol de documentacion tecnica de MDN Web Docs, facilitando el acceso a recursos de desarrollo web."
+      },
+      {
+        "year": "2023",
+        "title": "Curso: Básico de GNU/Linux",
+        "description": "Este curso pretende comprender la base fundamental de un sistema GNU/Linux."
+      },
+      { "year": "2023",
+        "title": "Evento: DebianDay",
+        "description": "Presentación de la distribución MiniOS, una distro de bolsillo y mostrar su potencial en el pendrive."
+      },
+      {
+        "year": "2023",
+        "title": "Navidad en las calles",
+        "description": "Todos los miembros de la comunidad local participaron en apoyo con el grupo Navidad en las calles para realizar una serie de talles en favor a los niños pequeños"
+      },
+      {
+        "year": "2024",
+        "title": "Evento: DebianDay",
+        "description": "Presentación del Proyecto Minunux y apoyo en instalación de Debian en laptop de los estudiantes"
+      },
+      {
+        "year": "2025",
+        "title": "Evento: DebianDay",
+        "description": "Mi participación fue una charla sobre el futuro del proyecto Minunux, implementación de un servidor Torrent para descargar Imagenes ISO de Debian y distribuciones derivadas como ser: Kali Linux, Parrot OS y MiniOS."
+      },
+      {
+       "year": "2025",
+       "title": "Taller: Gestión de redes con Debian Server",
+       "description": "Este taller pretende abarcar como gestionar redes utilizando unicamente la linea de comandos, implementando creación de redes LAN-DMZ, Harderning, Seguridad con Firewall e IPS"
+      },
+      {
+       "year": "2025",
+       "title": "Halloween Fest",
+       "description": "Mi participación se basa en presentar una demo sobre la implementación de un Honeypot en tiempo real para obtener información de las técnicas, instrucciones y herramientas que utilizan los ciberdelincuentes y asi aplicar contramedidas."
+     }
+    ]
+  }
+]

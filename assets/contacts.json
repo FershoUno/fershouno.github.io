@@ -1,0 +1,13 @@
+{
+  "message": "Si buscas colaboracion profesional en Linux, Software Libre, infraestructura o proyectos Open Source, estare encantado de conversar contigo.",
+  "social": [
+    {"enabled":true,"name":"Telegram","icon":"telegram","url":"https://t.me/fershouno"},
+    {"enabled":true,"name":"GitHub","icon":"github","url":"https://github.com/FershoUno"},
+    {"enabled":true,"name":"Instagram","icon":"instagram","url":"https://instagram.com/fersho.uno"},
+    {"enabled":false,"name":"WhatsApp","icon":"whatsapp","url":""},
+    {"enabled":true,"name":"Correo","icon":"email","url":"mailto:fershouno@proton.me"},
+    {"enabled":true,"name":"Facebook","icon":"facebook","url":"https://www.facebook.com/fershouno.oficial"},
+    {"enabled":true,"name":"YouTube","icon":"youtube","url":"https://www.youtube.com/@FershoUno"},
+    {"enabled":false,"name":"TikTok","icon":"tiktok","url":""}
+  ]
+}

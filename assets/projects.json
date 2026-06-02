@@ -1,0 +1,62 @@
+[
+  {
+    "enabled": true,
+    "title": "PluriOS",
+    "year": "2025",
+    "description": "PluriOS es un proyecto de código abierto que busca estandarizar un escritorio Linux para Bolivia. La distribución cuenta con el respaldo de varias comunidades de software libre bolivianas, como Núcleo Linux Bolivia, y se beneficia de las ventajas del ecosistema Linux, como actualizaciones frecuentes y soporte comunitario.",
+    "image": "plurios.png",
+    "video": "",
+    "github": "https://github.com/FershoUno/plurios-live",
+    "website": "https://plurios.openit.dev"
+  },
+  {
+    "enabled": true,
+    "title": "Imágenes Docker",
+    "year": "2025",
+    "description": "Repositorios de imágenes Docker: CentOS Stream, Nginx y Apache.",
+    "image": "docker.png",
+    "video": "",
+    "github": "https://github.com/FershoUno/docker-images",
+    "website": "https://hub.docker.com/u/fershouno"
+  },
+  {
+    "enabled": true,
+    "title": "Minunux (Descontinuado)",
+    "year": "2023",
+    "description": "Distribución GNU/Linux derivada de MiniOS Linux, enfocada en brindar herramientas educativas a estudiantes universitarios del área de computación de la F.I.C.C.T.",
+    "image": "minunux.jpg",
+    "video": "",
+    "github": "https://github.com/nlbol/minios-live",
+    "website": "https://github.com/nlbol/minios-live"
+  },
+  {
+    "enabled": true,
+    "title": "Contribuidor de MiniOS Linux",
+    "year": "2022",
+    "description": "MiniOS es un proyecto de origen ruso. Mi contribución consiste en la traducción al español, corrección de errores y mejoras del sistema. MiniOS es un sistema portátil, fiable y fácil de usar con una interfaz gráfica.",
+    "image": "minios.png",
+    "video": "",
+    "github": "https://github.com/minios-linux/minios-live/",
+    "website": "https://minios.dev"
+  },
+  {
+    "enabled": true,
+    "title": "N.E.R.V.E. (Actualizado)",
+    "year": "2024",
+    "description": "Network Exploitation, Reconnaissance & Vulnerability Engine (N.E.R.V.E.) es un escáner de vulnerabilidades diseñado para encontrar vulnerabilidades de bajo nivel en configuraciones específicas de aplicaciones, servicios de red y sistemas sin parches de seguridad.",
+    "image": "nerve.png",
+    "video": "",
+    "github": "https://github.com/FershoUno/nerve/tree/stable",
+    "website": "https://hub.docker.com/r/fershouno/nerve"
+  },
+  {
+    "enabled": true,
+    "title": "Otros proyectos",
+    "year": "2019",
+    "description": "Repositorio local de código con Gitea, implementación de una wiki comunitaria con DokuWiki e implementación de servidores de videojuegos en Linux, como Urban Terror, Sauerbraten (Cube 2), Xonotic, Minecraft, entre otros.",
+    "image": "",
+    "video": "",
+    "github": "",
+    "website": ""
+  }
+]

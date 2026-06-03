@@ -3,19 +3,19 @@
     "enabled": true,
     "name": "Nucleo Linux Bolivia",
     "logo": "",
-    "description": "Es una comunidad que se dedica a la investigación y promoción de tecnologías de código abierto, especialmente aquellas relacionadas con Linux y el software libre. El objetivo es crear una comunidad activa que comparta conocimientos y experiencias en el fascinante mundo de las tecnologías FOSS (Free and Open Source Software).",
+    "description": "Comunidad que se dedica a la investigación y promoción de tecnologías de código abierto, especialmente aquellas relacionadas con Linux y el software libre. El objetivo es crear una comunidad activa que comparta conocimientos y experiencias en el fascinante mundo de las tecnologías FOSS (Free and Open Source Software).",
     "from": "2019",
     "to": "Actualidad",
     "activities": [
       {
         "year": "2019",
-        "title": "FLISOL SANTA CRUZ 2019",
-        "description": "Participe brindando charlas Pre-FLISOL ne la Facultad de Ingenieria en Ciencias de la Computación y Telecomunicaciones enfocado a routers, redes y seguridad, brindando una opción practica sobre utilizar OpenWRT con la implementación de un AdBlock para bloquear los anuncios a nivel de red."
+        "title": "FLISOL SANTA CRUZ",
+        "description": "Participe brindando charlas Pre-FLISOL en la Facultad de Ingeniería en Ciencias de la Computación y Telecomunicaciones enfocado a routers, redes y seguridad, brindando una opción practica sobre utilizar OpenWRT con la implementación de un AdBlock para bloquear los adware en general  a nivel de red."
       },
       {
         "year": "2020",
-        "title": "FLISOL 2020",
-        "description": "Participe como parte de la Organización a nivel Nacional del Festival Latinoamericano de Instalacion de Software Libre en Bolivia. Coordinacion de voluntarios, talleres y logistica del evento."
+        "title": "FLISOL",
+        "description": "Participe como parte de la Organización a nivel nacional del Festival Latinoamericano de Instalación de Software Libre en Bolivia. Coordinacion de voluntarios, talleres y logistica del evento."
       },
       {
         "year": "2020",
@@ -80,7 +80,7 @@
       {
         "year": "2019",
         "title": "InstallFest en la FICCT",
-        "description": "Este evento tiene como objetivo apoyar con la instalación de la distribución Fedora y las herramientas necesarias para el avance academico para docentes que usan este sistema en sus clases, donde la parte esencial fue desarrollar una herramienta que permita descargar e instalar paquetes de manera offline."
+        "description": "Este evento tiene como objetivo apoyar con la instalación de la distribución Fedora y las herramientas necesarias para el avance académico para docentes que usan este sistema en sus clases, donde la parte esencial fue desarrollar una herramienta que permita descargar e instalar paquetes de manera offline."
       },
       {
         "year": "2023",
@@ -90,12 +90,7 @@
       {
         "year": "2024",
         "title": "Taller: Privacidad Digital y Seguridad en Linea",
-        "description": "Taller sobre herramientas de privacidad digital, navegacion segura, gestion de contrasenas y proteccion de datos personales."
-      },
-      {
-        "year": "2019",
-        "title": "Introducción a GNU/Linux",
-        "description": "Contribucion a la traduccion al espanol de documentacion tecnica de MDN Web Docs, facilitando el acceso a recursos de desarrollo web."
+        "description": "Taller sobre herramientas de privacidad digital, navegacion segura, gestión de contrasenas y protección de datos personales."
       },
       {
         "year": "2023",
@@ -124,7 +119,7 @@
       {
        "year": "2025",
        "title": "Taller: Gestión de redes con Debian Server",
-       "description": "Este taller pretende abarcar como gestionar redes utilizando unicamente la linea de comandos, implementando creación de redes LAN-DMZ, Harderning, Seguridad con Firewall e IPS"
+       "description": "Este taller pretende abarcar como gestionar redes utilizando únicamente la linea de comandos, implementando creación de redes LAN-DMZ, Harderning, Seguridad con Firewall e IPS"
       },
       {
        "year": "2025",

@@ -233,7 +233,7 @@ validate_resources
 # CLEAN & CREATE DIRECTORIES
 # =====================================================
 
-rm -rf "$OUTPUT" .github/workflows
+#rm -rf "$OUTPUT" .github/workflows
 mkdir -p "$OUTPUT"/{css,js,img,video,post}
 
 # =====================================================

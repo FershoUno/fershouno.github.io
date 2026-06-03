@@ -361,7 +361,10 @@ build_navbar() {
       <a class="btn btn-ghost text-xl" href="#hero" aria-label="Inicio">${SITE_TITLE}</a>
     </div>
     <div class="navbar-center hidden lg:flex"><ul class="menu menu-horizontal px-1">${items}</ul></div>
-    <div class="navbar-end"><a class="btn btn-primary" href="#contact">Contactar</a></div>
+    <div class="navbar-end">
+      <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun"></i></button>
+      <a class="btn btn-primary" href="#contact">Contactar</a>
+    </div>
   </nav>
 NAVEOF
 }
@@ -822,6 +825,11 @@ echo ""
 # =====================================================
 
 cat > "$OUTPUT/css/main.css" << 'EOCSS'
+/* === THEME TRANSITION === */
+html {
+  transition: background-color 0.3s ease;
+}
+
 /* === SCROLL & ACCESSIBILITY === */
 html { scroll-behavior: smooth; }
 section[id] { scroll-margin-top: 5rem; }
@@ -1191,6 +1199,41 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
   var CURRENT_POST = typeof BLOGCV_CURRENT_POST !== 'undefined' ? BLOGCV_CURRENT_POST : null;
   var PER_PAGE = parseInt(S.posts_per_page) || 5;
 
+  // ===== THEME =====
+  var THEMES = { light: 'winter', dark: 'business' };
+
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var icon = document.getElementById('theme-toggle-icon');
+    if (icon) {
+      icon.className = theme === THEMES.dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+  }
+
+  function initThemeToggle() {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved) {
+      setTheme(saved === 'dark' ? THEMES.dark : THEMES.light);
+    } else {
+      setTheme(prefersDark ? THEMES.dark : THEMES.light);
+    }
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('#theme-toggle');
+      if (!btn) return;
+      var html = document.documentElement;
+      var cur = html.getAttribute('data-theme');
+      var next = cur === THEMES.dark ? THEMES.light : THEMES.dark;
+      setTheme(next);
+      localStorage.setItem('theme', next === THEMES.dark ? 'dark' : 'light');
+    });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+      if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? THEMES.dark : THEMES.light);
+      }
+    });
+  }
+
   // ===== UTILITIES =====
   function readingTime(text) {
     if (!text) return '1 min';
@@ -1457,7 +1500,9 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     app.innerHTML =
       '<nav class="navbar bg-base-100/90 backdrop-blur-md shadow-sm sticky top-0 z-50">' +
       '<div class="navbar-start"><a class="btn btn-ghost text-xl" href="#hero">' + (S2.site_title || '') + '</a></div>' +
-      '<div class="navbar-end"><a class="btn btn-primary" href="#contact">Contactar</a></div></nav>' +
+      '<div class="navbar-end">' +
+      '<button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun"></i></button>' +
+      '<a class="btn btn-primary" href="#contact">Contactar</a></div></nav>' +
       '<main class="min-h-screen bg-base-200 py-8">' +
       '<article class="max-w-3xl mx-auto px-4">' +
       '<a href="#" class="link link-hover text-sm opacity-70 hover:opacity-100 inline-flex items-center gap-1 mb-4" onclick="window.history.back();return false;">' +
@@ -1501,6 +1546,8 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     app.innerHTML = MAIN_HTML;
     initFadeIn();
     initBlogSearch();
+    var curTheme = document.documentElement.getAttribute('data-theme');
+    if (curTheme) setTheme(curTheme);
     if (window.location.hash) {
       setTimeout(function () {
         var id = window.location.hash.slice(1);
@@ -1792,6 +1839,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
   document.addEventListener('DOMContentLoaded', function () {
     if (CURRENT_POST) {
       injectSchema();
+      initThemeToggle();
       initScrollToTop();
       initMouseGlow();
       initFadeIn();
@@ -1799,6 +1847,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     }
     MAIN_HTML = document.getElementById('app') ? document.getElementById('app').innerHTML : null;
     injectSchema();
+    initThemeToggle();
     initScroll();
     initScrollToTop();
     initMouseGlow();
@@ -1947,7 +1996,10 @@ POSTPAGE
   <div id="app" class="min-h-screen">
     <nav class="navbar bg-base-100/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
       <div class="navbar-start"><a class="btn btn-ghost text-xl" href="../index.html">${SITE_TITLE}</a></div>
-      <div class="navbar-end"><a class="btn btn-primary" href="../index.html#contact">Contactar</a></div>
+      <div class="navbar-end">
+        <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun"></i></button>
+        <a class="btn btn-primary" href="../index.html#contact">Contactar</a>
+      </div>
     </nav>
     <main class="min-h-screen bg-base-200 py-8">
       <article class="max-w-3xl mx-auto px-4">

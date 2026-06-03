@@ -2077,60 +2077,60 @@ echo ""
 # GENERATE GITHUB WORKFLOW
 # =====================================================
 
-mkdir -p .github/workflows
-cat > .github/workflows/deploy.yml << EODEPLOY
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y webp ffmpeg
-      - name: Build site
-        run: |
-          chmod +x build.sh
-          ./build.sh
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          path: ./public
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-EODEPLOY
-
-echo "  [OK] GitHub workflow generado"
-echo ""
+#mkdir -p .github/workflows
+#cat > .github/workflows/deploy.yml << EODEPLOY
+#name: Deploy to GitHub Pages
+#
+#on:
+#  push:
+#    branches: ["main"]
+#  workflow_dispatch:
+#
+#permissions:
+#  contents: read
+#  pages: write
+#  id-token: write
+#
+#concurrency:
+#  group: "pages"
+#  cancel-in-progress: false
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Install dependencies
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y webp ffmpeg
+#      - name: Build site
+#        run: |
+#          chmod +x build.sh
+#          ./build.sh
+#      - name: Setup Pages
+#        uses: actions/configure-pages@v5
+#        with:
+#          path: ./public
+#      - name: Upload artifact
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#          path: ./public
+#  deploy:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    environment:
+#      name: github-pages
+#      url: ${{ steps.deployment.outputs.page_url }}
+#    steps:
+#      - name: Deploy to GitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v4
+#
+#EODEPLOY
+#
+#echo "  [OK] GitHub workflow generado"
+#echo ""
 
 # =====================================================
 # PROCESS IMAGES

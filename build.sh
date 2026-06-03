@@ -98,6 +98,7 @@ SITE_DESC=$(jq_str site_description assets/settings.json)
 LONG_DESC=$(jq_str long_description assets/settings.json)
 FULLNAME=$(jq_str fullname assets/settings.json)
 USERNAME=$(jq_str username assets/settings.json)
+USERNAME_TITLE=$(jq_str username_title assets/settings.json)
 PROF_TITLE=$(jq_str professional_title assets/settings.json)
 PROFILE_IMG=$(jq_str profile_image assets/settings.json)
 FAVICON=$(jq_str favicon assets/settings.json)
@@ -802,7 +803,7 @@ build_footer() {
   cat >&3 << FOOTEOF
   <footer class="footer footer-center p-6 bg-base-300 text-base-content" role="contentinfo">
     <nav class="flex gap-4">${footer_links}</nav>
-    <aside><p class="text-sm">&copy; ${year} ${FULLNAME}. ${COPYRIGHT}</p></aside>
+    <aside><p class="text-sm">&copy; ${year} ${USERNAME_TITLE}. ${COPYRIGHT}</p></aside>
   </footer>
 FOOTEOF
 }
@@ -2060,7 +2061,7 @@ POSTPAGE
         </div>
       </article>
     </main>
-    <footer class="footer footer-center p-6 bg-base-300 text-base-content"><aside><p class="text-sm">&copy; $(date +%Y) ${FULLNAME}. ${COPYRIGHT}</p></aside></footer>
+    <footer class="footer footer-center p-6 bg-base-300 text-base-content"><aside><p class="text-sm">&copy; $(date +%Y) ${USERNAME_TITLE}. ${COPYRIGHT}</p></aside></footer>
   </div>
   <script src="../js/app.js"></script>
 </body>
@@ -2092,7 +2093,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -2109,13 +2110,23 @@ jobs:
           ./build.sh
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          path: ./public
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 EODEPLOY
 
 echo "  [OK] GitHub workflow generado"

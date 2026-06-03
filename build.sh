@@ -362,7 +362,9 @@ build_navbar() {
     </div>
     <div class="navbar-center hidden lg:flex"><ul class="menu menu-horizontal px-1">${items}</ul></div>
     <div class="navbar-end">
-      <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun"></i></button>
+      <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle swap swap-rotate" aria-label="Cambiar tema" title="Cambiar tema">
+        <i id="theme-toggle-icon" class="fa-solid fa-sun text-lg"></i>
+      </button>
       <a class="btn btn-primary" href="#contact">Contactar</a>
     </div>
   </nav>
@@ -830,6 +832,25 @@ html {
   transition: background-color 0.3s ease;
 }
 
+/* === THEME TOGGLE === */
+#theme-toggle {
+  transition: all 0.3s ease;
+}
+#theme-toggle:hover {
+  transform: scale(1.15);
+  color: var(--fallback-p, oklch(var(--p)));
+}
+#theme-toggle:focus-visible {
+  outline: 2px solid var(--fallback-p, oklch(var(--p)));
+  outline-offset: 3px;
+}
+#theme-toggle-icon {
+  transition: transform 0.3s ease;
+}
+#theme-toggle.swap-rotate #theme-toggle-icon {
+  transition: transform 0.3s ease;
+}
+
 /* === SCROLL & ACCESSIBILITY === */
 html { scroll-behavior: smooth; }
 section[id] { scroll-margin-top: 5rem; }
@@ -1201,6 +1222,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
 
   // ===== THEME =====
   var THEMES = { light: 'winter', dark: 'business' };
+  var THEME_WEB = S.theme_web || 'dark';
 
   function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
@@ -1212,12 +1234,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
 
   function initThemeToggle() {
     var saved = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (saved) {
-      setTheme(saved === 'dark' ? THEMES.dark : THEMES.light);
-    } else {
-      setTheme(prefersDark ? THEMES.dark : THEMES.light);
-    }
+    setTheme(saved ? (saved === 'dark' ? THEMES.dark : THEMES.light) : (THEME_WEB === 'dark' ? THEMES.dark : THEMES.light));
     document.addEventListener('click', function (e) {
       var btn = e.target.closest('#theme-toggle');
       if (!btn) return;
@@ -1226,11 +1243,6 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
       var next = cur === THEMES.dark ? THEMES.light : THEMES.dark;
       setTheme(next);
       localStorage.setItem('theme', next === THEMES.dark ? 'dark' : 'light');
-    });
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-      if (!localStorage.getItem('theme')) {
-        setTheme(e.matches ? THEMES.dark : THEMES.light);
-      }
     });
   }
 
@@ -1501,7 +1513,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
       '<nav class="navbar bg-base-100/90 backdrop-blur-md shadow-sm sticky top-0 z-50">' +
       '<div class="navbar-start"><a class="btn btn-ghost text-xl" href="#hero">' + (S2.site_title || '') + '</a></div>' +
       '<div class="navbar-end">' +
-      '<button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun"></i></button>' +
+      '<button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle swap swap-rotate" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun text-lg"></i></button>' +
       '<a class="btn btn-primary" href="#contact">Contactar</a></div></nav>' +
       '<main class="min-h-screen bg-base-200 py-8">' +
       '<article class="max-w-3xl mx-auto px-4">' +
@@ -1997,7 +2009,7 @@ POSTPAGE
     <nav class="navbar bg-base-100/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
       <div class="navbar-start"><a class="btn btn-ghost text-xl" href="../index.html">${SITE_TITLE}</a></div>
       <div class="navbar-end">
-        <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun"></i></button>
+        <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle swap swap-rotate" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun text-lg"></i></button>
         <a class="btn btn-primary" href="../index.html#contact">Contactar</a>
       </div>
     </nav>

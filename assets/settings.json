@@ -21,5 +21,6 @@
   "show_blog": false,
   "compress_video": true,
   "mouse_glow": false,
-  "posts_per_page": 5
+  "posts_per_page": 5,
+  "theme_web": "dark"
 }

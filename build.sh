@@ -358,13 +358,10 @@ build_navbar() {
           ${items}
         </ul>
       </div>
-      <a class="btn btn-ghost text-xl" href="#hero" aria-label="Inicio">${SITE_TITLE}</a>
+      <a class="btn btn-ghost text-lg md:text-xl" href="#hero" aria-label="Inicio">${SITE_TITLE}</a>
     </div>
     <div class="navbar-center hidden lg:flex"><ul class="menu menu-horizontal px-1">${items}</ul></div>
     <div class="navbar-end">
-      <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle swap swap-rotate" aria-label="Cambiar tema" title="Cambiar tema">
-        <i id="theme-toggle-icon" class="fa-solid fa-sun text-lg"></i>
-      </button>
       <a class="btn btn-primary" href="#contact">Contactar</a>
     </div>
   </nav>
@@ -832,23 +829,48 @@ html {
   transition: background-color 0.3s ease;
 }
 
-/* === THEME TOGGLE === */
+/* === THEME TOGGLE FLOATING === */
 #theme-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 9999;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fallback-b1, oklch(var(--b1)));
+  color: var(--fallback-bc, oklch(var(--bc)));
+  border: 1px solid var(--fallback-b2, oklch(var(--b2)));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 1.35rem;
 }
 #theme-toggle:hover {
-  transform: scale(1.15);
+  transform: scale(1.1);
   color: var(--fallback-p, oklch(var(--p)));
+  border-color: var(--fallback-p, oklch(var(--p)));
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+#theme-toggle:active {
+  transform: scale(0.95);
 }
 #theme-toggle:focus-visible {
   outline: 2px solid var(--fallback-p, oklch(var(--p)));
   outline-offset: 3px;
 }
-#theme-toggle-icon {
-  transition: transform 0.3s ease;
-}
-#theme-toggle.swap-rotate #theme-toggle-icon {
-  transition: transform 0.3s ease;
+
+@media (max-width: 640px) {
+  #theme-toggle {
+    bottom: 1rem;
+    left: 1rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.15rem;
+  }
 }
 
 /* === SCROLL & ACCESSIBILITY === */
@@ -1226,24 +1248,26 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
 
   function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    var icon = document.getElementById('theme-toggle-icon');
-    if (icon) {
-      icon.className = theme === THEMES.dark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-    }
   }
 
   function initThemeToggle() {
+    if (!document.getElementById('theme-toggle')) {
+      var btn = document.createElement('button');
+      btn.id = 'theme-toggle';
+      btn.setAttribute('aria-label', 'Cambiar tema');
+      btn.setAttribute('title', 'Cambiar tema');
+      btn.innerHTML = '<i class="fa-solid fa-circle-half-stroke"></i>';
+      document.body.appendChild(btn);
+      btn.addEventListener('click', function () {
+        var html = document.documentElement;
+        var cur = html.getAttribute('data-theme');
+        var next = cur === THEMES.dark ? THEMES.light : THEMES.dark;
+        setTheme(next);
+        localStorage.setItem('theme', next === THEMES.dark ? 'dark' : 'light');
+      });
+    }
     var saved = localStorage.getItem('theme');
     setTheme(saved ? (saved === 'dark' ? THEMES.dark : THEMES.light) : (THEME_WEB === 'dark' ? THEMES.dark : THEMES.light));
-    document.addEventListener('click', function (e) {
-      var btn = e.target.closest('#theme-toggle');
-      if (!btn) return;
-      var html = document.documentElement;
-      var cur = html.getAttribute('data-theme');
-      var next = cur === THEMES.dark ? THEMES.light : THEMES.dark;
-      setTheme(next);
-      localStorage.setItem('theme', next === THEMES.dark ? 'dark' : 'light');
-    });
   }
 
   // ===== UTILITIES =====
@@ -1511,9 +1535,8 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
 
     app.innerHTML =
       '<nav class="navbar bg-base-100/90 backdrop-blur-md shadow-sm sticky top-0 z-50">' +
-      '<div class="navbar-start"><a class="btn btn-ghost text-xl" href="#hero">' + (S2.site_title || '') + '</a></div>' +
+      '<div class="navbar-start"><a class="btn btn-ghost text-lg md:text-xl" href="#hero">' + (S2.site_title || '') + '</a></div>' +
       '<div class="navbar-end">' +
-      '<button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle swap swap-rotate" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun text-lg"></i></button>' +
       '<a class="btn btn-primary" href="#contact">Contactar</a></div></nav>' +
       '<main class="min-h-screen bg-base-200 py-8">' +
       '<article class="max-w-3xl mx-auto px-4">' +
@@ -2007,9 +2030,8 @@ POSTPAGE
 <body>
   <div id="app" class="min-h-screen">
     <nav class="navbar bg-base-100/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
-      <div class="navbar-start"><a class="btn btn-ghost text-xl" href="../index.html">${SITE_TITLE}</a></div>
+      <div class="navbar-start"><a class="btn btn-ghost text-lg md:text-xl" href="../index.html">${SITE_TITLE}</a></div>
       <div class="navbar-end">
-        <button id="theme-toggle" class="btn btn-ghost btn-sm btn-circle swap swap-rotate" aria-label="Cambiar tema" title="Cambiar tema"><i id="theme-toggle-icon" class="fa-solid fa-sun text-lg"></i></button>
         <a class="btn btn-primary" href="../index.html#contact">Contactar</a>
       </div>
     </nav>

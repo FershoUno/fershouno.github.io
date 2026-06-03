@@ -1,9 +1,9 @@
 [
   {
     "enabled": true,
-    "title": "PluriOS",
+    "title": "PluriOS Live",
     "year": "2025",
-    "description": "PluriOS es un proyecto de código abierto que busca estandarizar un escritorio Linux para Bolivia. La distribución cuenta con el respaldo de varias comunidades de software libre bolivianas, como Núcleo Linux Bolivia, y se beneficia de las ventajas del ecosistema Linux, como actualizaciones frecuentes y soporte comunitario.",
+    "description": "PluriOS Live es una herramienta que permite generar imágenes ISO del proyecto PluriOS de código abierto que busca estandarizar un escritorio Linux para Bolivia. La distribución cuenta con el respaldo de varias comunidades de software libre bolivianas, como Núcleo Linux Bolivia, y se beneficia de las ventajas del ecosistema Linux, como actualizaciones frecuentes y soporte comunitario.",
     "image": "plurios.png",
     "video": "",
     "github": "https://github.com/FershoUno/plurios-live",
@@ -21,7 +21,7 @@
   },
   {
     "enabled": true,
-    "title": "Minunux (Descontinuado)",
+    "title": "Minunux",
     "year": "2023",
     "description": "Distribución GNU/Linux derivada de MiniOS Linux, enfocada en brindar herramientas educativas a estudiantes universitarios del área de computación de la F.I.C.C.T.",
     "image": "minunux.jpg",

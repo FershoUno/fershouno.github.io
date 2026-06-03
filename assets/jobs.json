@@ -42,7 +42,7 @@
   {
     "enabled": true,
     "company": "Open IT (Software Libre - Soluciones y Servicios)",
-    "position": "Pasantía - Testing, Documentación y Desarrollo de PluriOS GNU/Linux",
+    "position": "Testing, Documentación y Desarrollo de PluriOS GNU/Linux",
     "from": "2021",
     "to": "2021",
     "summary": "Participación en actividades de testing, documentación técnica y desarrollo relacionadas con la distribución PluriOS GNU/Linux.",
@@ -74,7 +74,7 @@
   {
     "enabled": true,
     "company": "Open IT (Software Libre - Soluciones y Servicios)",
-    "position": "Pasantía - Documentación e Implementación de OpenWrt",
+    "position": "Documentación, ensamblaje e Implementación de OpenWrt",
     "from": "2020",
     "to": "2020",
     "summary": "Participación en tareas de documentación, compilación de imágenes personalizadas, testing e implementación de soluciones basadas en OpenWrt.",
@@ -105,7 +105,7 @@
   {
     "enabled": true,
     "company": "AGETIC",
-    "position": "Pasantía - Capacitación y Soporte Técnico",
+    "position": "Capacitación y Soporte Técnico",
     "from": "2019",
     "to": "2019",
     "summary": "Participación en actividades de capacitación y soporte técnico relacionadas con tecnologías FOSS y TIC dirigidas a instituciones educativas.",

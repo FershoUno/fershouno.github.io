@@ -11,6 +11,16 @@
   },
   {
     "enabled": true,
+    "title": "Repositorio DEB PluriOS",
+    "year": "2025",
+    "description": "Repositorio oficial de paquetes DEB para PluriOS, permitiendo la gestión centralizada de software, actualizaciones y dependencias.",
+    "image": "repositorio-deb.png",
+    "video": "",
+    "github": "https://github.com/nlbol/deb",
+    "website": "https://repo.plurios.openit.dev"
+  },
+  {
+    "enabled": true,
     "title": "Imágenes Docker",
     "year": "2025",
     "description": "Repositorios de imágenes Docker: CentOS Stream, Nginx y Apache.",

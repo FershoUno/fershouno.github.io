@@ -1,6 +1,6 @@
 {
 "summary": "Entusiasta y colaborador del ecosistema Linux y el Software Libre, con experiencia en infraestructura, redes, administración de servidores, virtualización, contenedores y automatización. Participante activo en comunidades tecnológicas y proyectos de código abierto.",
-  "skills": ["Linux","Debian","Ubuntu","Docker","LXC/LXD","OpenWRT","IPfire","OPNsense","Redes","Zentyal","NethServer","Firewall","Virtualización","Bash","Python","Git","Nginx","Apache","DNS","DHCP","VPN"],
+  "skills": ["Linux","Debian","Ubuntu","Docker","PROXMOX","LXC/LXD","OpenWRT","IPfire","OPNsense","Redes","Zentyal","NethServer","Firewall","Virtualización","Bash","Python","Git","Nginx","Apache","DNS","DHCP","VPN"],
   "specialties": ["Administración Linux","Infraestructura de Servidores","Redes y Firewall","Virtualización y contenedores","Open Source y Software Libre","Automatización (Bash/Python)","Seguridad Informática"],
   "certifications": ["PROXMOX VE Stand Alone", "NethServer Gateway","SOC 101","Linux Essentials"]
 }

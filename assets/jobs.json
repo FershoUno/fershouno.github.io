@@ -8,6 +8,7 @@
     "summary": "Implementación, administración y optimización de infraestructura VPS basada en Linux, brindando soporte técnico a clientes y mantenimiento de servicios.",
     "technologies": [
       "Linux",
+      "PROXMOX",
       "Debian",
       "Ubuntu",
       "Docker",

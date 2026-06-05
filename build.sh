@@ -874,6 +874,14 @@ html {
   }
 }
 
+/* === CERTIFICATIONS RESPONSIVE === */
+.badge-outline {
+  white-space: normal;
+  word-break: break-word;
+  height: auto;
+  min-height: 1.75rem;
+}
+
 /* === SCROLL & ACCESSIBILITY === */
 html { scroll-behavior: smooth; }
 section[id] { scroll-margin-top: 5rem; }

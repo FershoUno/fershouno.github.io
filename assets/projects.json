@@ -31,6 +31,16 @@
   },
   {
     "enabled": true,
+    "title": "Jitsi Meet comunitario",
+    "year": "2024",
+    "description": "Implementación y administración de una plataforma de reuniones virtuales basada en Jitsi Meet para uso comunitario de grupos Linux y comunidades de software libre en Santa Cruz, Bolivia. Este servicio solo se habilita cuando se solicita su uso.",
+    "image": "jitsi-meet-self-host.jpg",
+    "video": "",
+    "github": "",
+    "website": "https://meet.nucleolinux.duckdns.org"
+  },
+  {
+    "enabled": true,
     "title": "Minunux",
     "year": "2023",
     "description": "Distribución GNU/Linux derivada de MiniOS Linux, enfocada en brindar herramientas educativas a estudiantes universitarios del área de computación de la F.I.C.C.T.",

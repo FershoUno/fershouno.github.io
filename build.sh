@@ -502,7 +502,9 @@ PROJEOF
     p_img_webp=$(to_webp "$p_image")
 
     local img_html=""
-    [ -n "$p_image" ] && img_html="<figure><img src=\"img/${p_img_webp}\" alt=\"${p_title}\" class=\"w-full h-48 object-cover\" loading=\"lazy\"/></figure>"
+    if [ -n "$p_image" ]; then
+      img_html="<figure><button type=\"button\" class=\"project-img-btn\" data-full=\"img/${p_img_webp}\" data-alt=\"${p_title}\" aria-label=\"Ampliar imagen: ${p_title}\"><img src=\"img/${p_img_webp}\" alt=\"${p_title}\" class=\"w-full h-48 object-cover\" loading=\"lazy\" decoding=\"async\"/></button></figure>"
+    fi
 
     local gh_html=""
     [ -n "$p_github" ] && gh_html="<a href=\"${p_github}\" target=\"_blank\" rel=\"noopener\" class=\"btn btn-ghost btn-sm\" aria-label=\"Código fuente\"><i class=\"fa-brands fa-github text-lg\"></i></a>"
@@ -556,15 +558,12 @@ build_communities() {
   <section id="communities" class="py-20 px-4 bg-base-100" aria-label="Comunidades">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold mb-8 text-center fade-in">Comunidades</h2>
-      <p class="text-center opacity-70 mb-10 max-w-2xl mx-auto fade-in">Selecciona una comunidad para ver su historial de actividades.</p>
-      <div id="communities-container" class="flex flex-col lg:flex-row gap-6 fade-in">
-        <div id="communities-list" class="lg:w-1/3 xl:w-[30%] space-y-3" role="tablist"></div>
-        <div id="communities-detail" class="lg:w-2/3 xl:w-[70%]">
-          <div id="communities-detail-inner" class="bg-base-200/50 rounded-2xl p-6 border border-base-300/30 min-h-[400px]">
-            <div class="flex items-center justify-center h-full opacity-50">
-              <svg class="w-8 h-8 mr-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-              <span class="text-sm">Selecciona una comunidad</span>
-            </div>
+      <p class="text-center opacity-70 mb-10 max-w-2xl mx-auto fade-in">Selecciona una comunidad para ver tu participación y las actividades que realizaste.</p>
+      <div id="communities-container" class="fade-in">
+        <div class="hist">
+          <div id="communities-list" class="hist-list" role="tablist" aria-label="Comunidades" aria-orientation="vertical"></div>
+          <div class="hist-main">
+            <div id="communities-detail" class="hist-detail" role="tabpanel" tabindex="0" aria-live="polite"></div>
           </div>
         </div>
       </div>
@@ -599,15 +598,12 @@ build_jobs() {
   <section id="jobs" class="py-20 px-4 bg-base-200" aria-label="Experiencia laboral">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold mb-8 text-center fade-in">Experiencia Laboral</h2>
-      <p class="text-center opacity-70 mb-10 max-w-2xl mx-auto fade-in">Selecciona una posición para ver los detalles completos.</p>
-      <div id="jobs-container" class="flex flex-col lg:flex-row gap-6 fade-in">
-        <div id="jobs-list" class="lg:w-1/3 xl:w-[30%] space-y-3" role="tablist"></div>
-        <div id="jobs-detail" class="lg:w-2/3 xl:w-[70%]">
-          <div id="jobs-detail-inner" class="bg-base-100/50 rounded-2xl p-6 border border-base-300/30 min-h-[400px]">
-            <div class="flex items-center justify-center h-full opacity-50">
-              <svg class="w-8 h-8 mr-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              <span class="text-sm">Selecciona un cargo</span>
-            </div>
+      <p class="text-center opacity-70 mb-10 max-w-2xl mx-auto fade-in">Recorre tu trayectoria: selecciona una posición para ver sus detalles.</p>
+      <div id="jobs-container" class="fade-in">
+        <div class="hist">
+          <div id="jobs-list" class="hist-list" role="tablist" aria-label="Experiencia laboral" aria-orientation="vertical"></div>
+          <div class="hist-main">
+            <div id="jobs-detail" class="hist-detail" role="tabpanel" tabindex="0" aria-live="polite"></div>
           </div>
         </div>
       </div>
@@ -882,16 +878,109 @@ html {
   min-height: 1.75rem;
 }
 
-/* === SCROLL & ACCESSIBILITY === */
-html { scroll-behavior: smooth; }
-section[id] { scroll-margin-top: 5rem; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+/* === TARGET SIZE MINIMUM (WCAG 2.5.8) === */
+/* Los links de texto del footer miden 20px de alto; se amplía el area
+   pulsable con padding y margen negativo para no alterar la composición. */
+footer .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin-top: -0.25rem;
+  margin-bottom: -0.25rem;
 }
+
+/* === PROJECT IMAGE ZOOM TRIGGER === */
+.project-img-btn {
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+  overflow: hidden;
+  background: none;
+  border: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.project-img-btn img {
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+}
+@media (hover: hover) {
+  .project-img-btn:hover img { transform: scale(1.045); }
+}
+.project-img-btn:focus-visible {
+  outline: 2px solid var(--fallback-p, oklch(var(--p)));
+  outline-offset: -2px;
+  border-radius: 0.5rem;
+}
+
+/* === IMAGE LIGHTBOX ===
+   Interaccion unica: clic/tap sobre la imagen abre, clic/tap sobre la imagen
+   cierra. Sin boton de cierre, lupa, barra de herramientas ni caption.
+   ESC queda como atajo de accesibilidad, sin ningun elemento en pantalla.
+
+   Rendimiento: el ajuste de tamano lo resuelve el CSS (max-width/max-height)
+   y la animacion solo escribe transform y opacity, que se ejecutan en la GPU
+   sin provocar layout. No hay medidas por JS ni reflows forzados. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Fondo opaco a proposito: sin backdrop-filter, que repintaria la pantalla
+     completa en cada frame y es la causa mas pesada de una apertura lenta. */
+  background: rgba(0, 0, 0, 0.92);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.lightbox.open { opacity: 1; visibility: visible; pointer-events: auto; }
+
+.lightbox-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-out;
+}
+
+.lightbox-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* El navegador decide el tamano: siempre visible, centrada y sin deformar.
+     Al no tocar width/height desde JS, abrir y cerrar no provoca layout. */
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  /* Capa propia desde el inicio: la primera animacion no compite por el
+     rasterizado con el resto de la pagina. */
+  will-change: transform;
+  cursor: zoom-out;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+.lightbox-img:focus { outline: none; }
+.lightbox-img:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 4px;
+}
+
+/* Bloqueo de scroll sin coste: no se escribe scrollTop ni se usa
+   position:fixed, asi que la pagina no se recoloca, no hay reflow del
+   documento y la posicion del usuario se conserva exacta al cerrar. */
+html.lb-lock { overflow: hidden; overscroll-behavior: none; }
+html.lb-lock body { touch-action: none; }
 
 /* === FADE IN ANIMATIONS === */
 .fade-in {
@@ -1061,177 +1150,249 @@ section[id] { scroll-margin-top: 5rem; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* === COMMUNITY / JOB PANEL LAYOUT === */
-#communities-container, #jobs-container {
-  min-height: 400px;
-}
-
-#communities-list, #jobs-list {
-  max-height: 600px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--fallback-bc, oklch(var(--bc) / 0.2)) transparent;
-}
-#communities-list::-webkit-scrollbar,
-#jobs-list::-webkit-scrollbar {
-  width: 4px;
-}
-#communities-list::-webkit-scrollbar-thumb,
-#jobs-list::-webkit-scrollbar-thumb {
-  background: var(--fallback-bc, oklch(var(--bc) / 0.2));
-  border-radius: 4px;
-}
-
-.panel-item {
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.25s ease;
-}
-.panel-item:hover {
-  border-color: var(--fallback-p, oklch(var(--p) / 0.3));
-  background: var(--fallback-b2, oklch(var(--b2)));
-}
-.panel-item.active {
-  border-color: var(--fallback-p, oklch(var(--p) / 0.6));
-  background: var(--fallback-p, oklch(var(--p) / 0.08));
-  box-shadow: 0 0 20px var(--fallback-p, oklch(var(--p) / 0.06));
-}
-
-/* === HORIZONTAL TIMELINE === */
-.timeline-h {
-  position: relative;
-  display: flex;
+/* === HISTORY: LIST + DETAIL (Experiencia y Comunidades) ===
+   Patron unico para ambas secciones: lista resumida a la izquierda y un unico
+   panel de detalle a la derecha. Solo el elemento seleccionado muestra su
+   informacion completa, sin acumular contenido. */
+.hist {
+  display: grid;
   gap: 1rem;
-  overflow-x: auto;
-  padding: 1.5rem 0.5rem 1rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--fallback-bc, oklch(var(--bc) / 0.2)) transparent;
-  -webkit-overflow-scrolling: touch;
-}
-.timeline-h::-webkit-scrollbar {
-  height: 4px;
-}
-.timeline-h::-webkit-scrollbar-thumb {
-  background: var(--fallback-bc, oklch(var(--bc) / 0.2));
-  border-radius: 4px;
-}
-
-.timeline-h::before {
-  content: '';
-  position: absolute;
-  top: 2.25rem;
-  left: 2rem;
-  right: 2rem;
-  height: 2px;
-  background: var(--fallback-bc, oklch(var(--bc) / 0.12));
-  z-index: 0;
-}
-
-.timeline-h-item {
-  position: relative;
-  flex: 0 0 260px;
-  z-index: 1;
-}
-
-.timeline-h-marker {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--fallback-p, oklch(var(--p)));
-  border: 3px solid var(--fallback-b1, oklch(var(--b1)));
-  box-shadow: 0 0 0 2px var(--fallback-p, oklch(var(--p) / 0.3));
-  margin-bottom: 0.75rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.timeline-h-item:hover .timeline-h-marker {
-  transform: scale(1.3);
-  box-shadow: 0 0 0 4px var(--fallback-p, oklch(var(--p) / 0.4));
-}
-
-.timeline-h-card {
-  background: var(--fallback-b2, oklch(var(--b2)));
-  border: 1px solid var(--fallback-b3, oklch(var(--b3)));
-  border-radius: 0.75rem;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-.timeline-h-card:hover {
-  border-color: var(--fallback-p, oklch(var(--p) / 0.3));
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-.timeline-h-card.active {
-  border-color: var(--fallback-p, oklch(var(--p) / 0.5));
-  box-shadow: 0 0 15px var(--fallback-p, oklch(var(--p) / 0.08));
-}
-
-.timeline-h-year {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.5;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-.timeline-h-type {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.6;
-}
-
-/* === ACTIVITY DETAIL (expanded below timeline) === */
-.activity-detail {
-  animation: slideDown 0.3s ease-out;
-  overflow: hidden;
-}
-@keyframes slideDown {
-  from { opacity: 0; max-height: 0; }
-  to { opacity: 1; max-height: 1000px; }
-}
-
-/* === RESPONSIVE: convert horizontal timeline to vertical on small screens === */
-@media (max-width: 1023px) {
-  #communities-list, #jobs-list {
-    max-height: none;
-    overflow-y: visible;
-  }
-  .timeline-h {
-    flex-direction: column;
-    overflow-x: visible;
-    gap: 1.5rem;
-    padding: 0.5rem 0 0.5rem 2rem;
-  }
-  .timeline-h::before {
-    top: 0;
-    bottom: 0;
-    left: 0.75rem;
-    right: auto;
-    width: 2px;
-    height: 100%;
-  }
-  .timeline-h-item {
-    flex: none;
-    width: 100%;
-  }
-  .timeline-h-marker {
-    position: absolute;
-    left: -1.65rem;
-    top: 0.5rem;
-  }
-}
-
-/* === SCROLL INDICATOR === */
-.scroll-hint {
-  text-align: center;
-  font-size: 0.7rem;
-  opacity: 0.4;
-  letter-spacing: 0.05em;
-  margin-top: -0.5rem;
-  margin-bottom: 0.5rem;
+  align-items: start;
 }
 @media (min-width: 1024px) {
-  .scroll-hint { display: none; }
+  .hist { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: 1.25rem; }
+}
+
+.hist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+@media (min-width: 1024px) {
+  .hist-list {
+    max-height: 32rem;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--fallback-bc, oklch(var(--bc) / 0.2)) transparent;
+  }
+  .hist-list::-webkit-scrollbar { width: 4px; }
+  .hist-list::-webkit-scrollbar-thumb {
+    background: var(--fallback-bc, oklch(var(--bc) / 0.2));
+    border-radius: 4px;
+  }
+}
+
+.hist-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 0.875rem;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  border-radius: 0.625rem;
+  background: var(--fallback-b1, oklch(var(--b1)));
+  cursor: pointer;
+  transition: background-color 0.22s ease, border-color 0.22s ease;
+}
+.hist-item:hover { border-color: var(--fallback-p, oklch(var(--p) / 0.25)); }
+.hist-item[aria-selected="true"] {
+  border-color: var(--fallback-p, oklch(var(--p) / 0.4));
+  border-left-color: var(--fallback-p, oklch(var(--p)));
+  background: var(--fallback-p, oklch(var(--p) / 0.07));
+}
+.hist-item:focus-visible {
+  outline: 2px solid var(--fallback-p, oklch(var(--p)));
+  outline-offset: 2px;
+}
+
+.hist-period {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.hist-company {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  line-height: 1.3;
+  margin-top: 0.15rem;
+  overflow-wrap: break-word;
+}
+.hist-position {
+  display: block;
+  font-size: 0.77rem;
+  line-height: 1.35;
+  opacity: 0.65;
+  margin-top: 0.1rem;
+  overflow-wrap: break-word;
+}
+.hist-count {
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-size: 0.68rem;
+  opacity: 0.5;
+}
+
+.hist-detail {
+  background: var(--fallback-b2, oklch(var(--b2) / 0.5));
+  border: 1px solid var(--fallback-b3, oklch(var(--bc) / 0.12));
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  min-height: 12rem;
+}
+.hist-detail:focus-visible {
+  outline: 2px solid var(--fallback-p, oklch(var(--p)));
+  outline-offset: 2px;
+}
+.hist-detail:focus { outline: none; }
+
+/* Cambio de contenido: entrada corta y discreta, sin saltos. */
+@keyframes detailIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.hist-detail.enter { animation: detailIn 260ms ease-out; }
+
+/* Cabecera del panel de detalle */
+.det-head { display: flex; align-items: flex-start; gap: 0.875rem; margin-bottom: 1rem; }
+.det-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.625rem;
+  background: var(--fallback-p, oklch(var(--p) / 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.det-icon img { width: 100%; height: 100%; object-fit: contain; }
+.det-title { font-size: 1.1rem; font-weight: 700; line-height: 1.25; overflow-wrap: break-word; }
+.det-role { color: var(--fallback-p, oklch(var(--p))); font-weight: 600; font-size: 0.88rem; margin-top: 0.15rem; overflow-wrap: break-word; }
+.det-period {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.72rem;
+  opacity: 0.55;
+  margin-top: 0.3rem;
+}
+
+.det-lead {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin-bottom: 0.875rem;
+  overflow-wrap: break-word;
+}
+
+.det-group {
+  border: 1px solid var(--fallback-bc, oklch(var(--bc) / 0.2));
+  background: var(--fallback-b3, oklch(var(--b3) / 0.3));
+  border-radius: 0.625rem;
+  padding: 0.75rem 0.875rem;
+  margin-bottom: 0.75rem;
+}
+.det-group:last-child { margin-bottom: 0; }
+.det-group h5 {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.det-group h5 svg { width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
+.det-group li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+  overflow-wrap: break-word;
+}
+.det-group li + li { margin-top: 0.35rem; }
+.det-group li::before {
+  content: '';
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--fallback-p, oklch(var(--p)));
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+  opacity: 0.7;
+}
+
+.det-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.875rem; }
+
+/* Lista de actividades con marca de año */
+.det-yeargroup {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin: 0.875rem 0 0.5rem;
+}
+.det-yeargroup:first-child { margin-top: 0; }
+.det-acts { position: relative; padding-left: 1.125rem; }
+.det-acts::before {
+  content: '';
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0.25rem;
+  width: 2px;
+  background: var(--fallback-bc, oklch(var(--bc) / 0.12));
+}
+.det-act { position: relative; padding-bottom: 0.8rem; }
+.det-act:last-child { padding-bottom: 0; }
+.det-act::before {
+  content: '';
+  position: absolute;
+  top: 0.35rem;
+  left: -0.9375rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--fallback-p, oklch(var(--p) / 0.5));
+}
+.det-act-title { font-weight: 600; font-size: 0.82rem; line-height: 1.35; overflow-wrap: break-word; }
+.det-act-desc {
+  font-size: 0.79rem;
+  line-height: 1.55;
+  opacity: 0.7;
+  margin-top: 0.15rem;
+  overflow-wrap: break-word;
+}
+
+.hist-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  opacity: 0.5;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .hist-detail { padding: 1rem; }
+  .det-title { font-size: 1rem; }
+}
+
+/* Respeta la preferencia del sistema: sin transiciones en el lightbox
+   ni en el cambio de panel de detalle. El JS tambien lo comprueba. */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox,
+  .lightbox-img {
+    transition: none !important;
+  }
+  .hist-detail.enter { animation: none; }
 }
 EOCSS
 
@@ -1279,6 +1440,254 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     setTheme(saved ? (saved === 'dark' ? THEMES.dark : THEMES.light) : (THEME_WEB === 'dark' ? THEMES.dark : THEMES.light));
   }
 
+  // ===== IMAGE LIGHTBOX =====
+  // Un unico sistema de visualizacion. Se corregido sobre el anterior, sin
+  // duplicarlo: el elemento <img> se crea una vez y se reutiliza siempre.
+  //   clic/tap sobre la imagen -> abre
+  //   clic/tap sobre la imagen -> cierra
+  // ESC queda como atajo de accesibilidad (sin ningun control en pantalla).
+  //
+  // Rendimiento:
+  //   - el tamano lo pone el CSS (max-width/max-height): cero layout por JS
+  //   - solo se animan transform y opacity (GPU, sin reflow)
+  //   - el bloqueo de scroll no escribe scrollTop ni usa position:fixed
+  //   - la imagen se precarga al pasar el raton o al enfocarla
+  //   - si se cierra a mitad de apertura, la animacion se invierte desde el
+  //     fotograma actual (sin salto y sin reinicio)
+  var lightbox = (function () {
+    var OPEN_MS = 200;   // dentro del rango 150-250ms pedido
+    var CLOSE_MS = 180;
+    var EASE = 'cubic-bezier(0.2, 0.7, 0.3, 1)';
+    // Escala de salida muy moderada: solo suaviza la entrada, nunca crece
+    // hasta salirse de la pantalla.
+    var SCALE_FROM = 0.96;
+    var SHIFT = 0.35;    // porcion del viaje hacia la miniatura
+    var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var supportsWA = typeof Element !== 'undefined' && !!Element.prototype.animate;
+
+    var root = null, stage = null, img = null;
+    var state = 'closed';                 // closed | opening | open | closing
+    var lastFocus = null, triggerRect = null;
+    var rootAnim = null, imgAnim = null;
+    var preloaded = {};
+
+    function tf(tx, ty, s) {
+      return 'translate(-50%, -50%) translate3d(' + tx + 'px,' + ty + 'px, 0) scale(' + s + ')';
+    }
+
+    // Punto de partida: cerca de la miniatura, nunca fuera de la pantalla.
+    function fromThumb() {
+      if (!triggerRect) return { tx: 0, ty: 0 };
+      return {
+        tx: (triggerRect.left + triggerRect.width / 2 - window.innerWidth / 2) * SHIFT,
+        ty: (triggerRect.top + triggerRect.height / 2 - window.innerHeight / 2) * SHIFT
+      };
+    }
+
+    function cancelAnims() {
+      if (rootAnim) { rootAnim.cancel(); rootAnim = null; }
+      if (imgAnim) { imgAnim.cancel(); imgAnim = null; }
+    }
+
+    // Espera real de la animacion: nunca un setTimeout que pueda desfasarse.
+    function whenSettled() {
+      var list = [rootAnim, imgAnim].filter(Boolean).map(function (a) {
+        return a.finished.catch(function () {});
+      });
+      return Promise.all(list);
+    }
+
+    /* ---------- animaciones ---------- */
+    function runOpen() {
+      if (!supportsWA || REDUCED) {
+        root.classList.add('open');
+        state = 'open';
+        return;
+      }
+      cancelAnims();
+
+      var s = fromThumb();
+      var opts = { duration: OPEN_MS, easing: EASE, fill: 'both' };
+      rootAnim = root.animate([{ opacity: 0 }, { opacity: 1 }], opts);
+      imgAnim = img.animate(
+        [{ transform: tf(s.tx, s.ty, SCALE_FROM) }, { transform: tf(0, 0, 1) }],
+        opts
+      );
+      // Se revela en el mismo frame en que ya estan aplicados el fondo y la
+      // posicion inicial: nunca hay un instante con el marco negro vacio.
+      root.classList.add('open');
+      state = 'open';
+      // Al terminar se liberan: el estado final es exactamente el del CSS.
+      whenSettled().then(function () { if (state === 'open') cancelAnims(); });
+    }
+
+    function close() {
+      if (state === 'closed' || state === 'closing') return;
+      state = 'closing';
+
+      // Si el overlay nunca llego a revelarse (por ejemplo, la imagen no se
+      // pudo cargar), se retira de inmediato: animarlo produciria un destello.
+      if (!root.classList.contains('open')) { finishClose(); return; }
+
+      // Apertura todavia en curso: se invierte desde donde este. El cierre
+      // empieza al instante, sin esperar a que la apertura acabe.
+      if (supportsWA && imgAnim && imgAnim.playState === 'running' && rootAnim) {
+        imgAnim.reverse();
+        rootAnim.reverse();
+        whenSettled().then(finishClose);
+        return;
+      }
+
+      cancelAnims();
+      if (REDUCED || !supportsWA) { finishClose(); return; }
+
+      var s = fromThumb();
+      var opts = { duration: CLOSE_MS, easing: EASE, fill: 'forwards' };
+      imgAnim = img.animate(
+        [{ transform: tf(0, 0, 1) }, { transform: tf(s.tx, s.ty, SCALE_FROM) }], opts
+      );
+      rootAnim = root.animate([{ opacity: 1 }, { opacity: 0 }], opts);
+      whenSettled().then(finishClose);
+    }
+
+    function finishClose() {
+      if (state !== 'closing') return;
+      cancelAnims();
+      root.classList.remove('open');
+      unlockScroll();
+      state = 'closed';
+      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      lastFocus = null;
+    }
+
+    /* ---------- scroll: no se mueve la pagina, no hay reflow ---------- */
+    function lockScroll() {
+      document.documentElement.classList.add('lb-lock');
+    }
+
+    function unlockScroll() {
+      document.documentElement.classList.remove('lb-lock');
+    }
+
+    /* ---------- teclado ---------- */
+    function onKeydown(e) {
+      if (state === 'closed') return;
+      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+      // El dialogo no contiene otros controles: el foco no puede salirse.
+      if (e.key === 'Tab') { e.preventDefault(); img.focus(); }
+    }
+
+    /* ---------- construir una sola vez y reutilizar ---------- */
+    function build() {
+      if (root) return;
+      root = document.createElement('div');
+      root.className = 'lightbox';
+      root.setAttribute('role', 'dialog');
+      root.setAttribute('aria-modal', 'true');
+      root.setAttribute('aria-label', 'Imagen ampliada');
+
+      stage = document.createElement('div');
+      stage.className = 'lightbox-stage';
+
+      // Un unico <img> para todo: abrir y cerrar nunca crean otro elemento ni
+      // vuelven a descargar una imagen ya cargada.
+      img = document.createElement('img');
+      img.className = 'lightbox-img';
+      img.alt = '';
+      img.draggable = false;
+      img.tabIndex = -1;
+      stage.appendChild(img);
+      root.appendChild(stage);
+      document.body.appendChild(root);
+
+      root.addEventListener('click', function (e) {
+        if (state === 'closed' || state === 'closing') return;
+        if (e.target === img || e.target === stage || e.target === root) close();
+      });
+      document.addEventListener('keydown', onKeydown, true);
+    }
+
+    /* ---------- precarga: el clic ya no espera a la red ---------- */
+    function preload(url) {
+      if (!url || preloaded[url]) return;
+      preloaded[url] = true;
+      var probe = new Image();
+      probe.src = url;
+    }
+
+    /* ---------- abrir ---------- */
+    function show(trigger) {
+      if (state !== 'closed') return;
+      build();
+      var url = trigger.getAttribute('data-full');
+      if (!url) return;
+      lastFocus = trigger;
+      triggerRect = trigger.getBoundingClientRect();
+
+      var alt = trigger.getAttribute('data-alt') || '';
+      img.alt = alt;
+      root.setAttribute('aria-label', alt ? 'Imagen ampliada: ' + alt : 'Imagen ampliada');
+
+      state = 'opening';
+      lockScroll();
+      img.focus({ preventScroll: true });
+
+      // Reutiliza la imagen si ya es la misma: no hay nueva peticion.
+      if (img.getAttribute('src') === url && img.complete && img.naturalWidth > 0) {
+        runOpen();
+        return;
+      }
+
+      // Aun no esta decodificada. El overlay permanece oculto hasta que la
+      // imagen este lista: runOpen revela fondo e imagen en el mismo frame,
+      // de modo que nunca se ve un rectangulo negro vacio.
+      img.style.opacity = '0';
+      var onReady = function () {
+        img.style.opacity = '';
+        if (state !== 'opening') return;
+        if (!img.naturalWidth) { close(); return; }
+        runOpen();
+      };
+      if (img.decode) {
+        img.src = url;
+        img.decode().then(onReady, onReady);
+      } else {
+        img.onload = onReady;
+        img.onerror = function () { img.style.opacity = ''; close(); };
+        img.src = url;
+      }
+    }
+
+    return {
+      init: function () {
+        document.addEventListener('click', function (e) {
+          if (state !== 'closed') return;
+          var trigger = e.target.closest && e.target.closest('.project-img-btn');
+          if (trigger) { e.preventDefault(); show(trigger); }
+        });
+        // Precarga al apuntar o al enfocar: al hacer clic ya esta en cache.
+        function warm(e) {
+          var t = e.target.closest && e.target.closest('.project-img-btn');
+          if (t) preload(t.getAttribute('data-full'));
+        }
+        document.addEventListener('mouseover', warm, { passive: true });
+        document.addEventListener('focusin', warm, { passive: true });
+
+        // Precarga en reposo de las primeras imagenes, sin datos moviles.
+        var conn = navigator.connection;
+        if (!conn || !conn.saveData) {
+          var idle = window.requestIdleCallback || function (fn) { setTimeout(fn, 600); };
+          idle(function () {
+            var list = document.querySelectorAll('.project-img-btn[data-full]');
+            for (var i = 0; i < list.length && i < 3; i++) {
+              preload(list[i].getAttribute('data-full'));
+            }
+          });
+        }
+      }
+    };
+  })();
+
   // ===== UTILITIES =====
   function readingTime(text) {
     if (!text) return '1 min';
@@ -1294,6 +1703,17 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
   function getImg(name) {
     if (!name) return '';
     return 'img/' + name.replace(/\.(png|jpg|jpeg|bmp|gif)$/i, '.webp');
+  }
+
+  // Escapa el contenido de los JSON antes de inyectarlo en el DOM.
+  function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   var ICONS_MAP = {
@@ -1396,13 +1816,78 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
   function initScrollToTop() {
     var btn = document.createElement('button');
     btn.className = 'scroll-top-btn btn btn-circle btn-primary shadow-lg';
-    btn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+    btn.innerHTML = '<i class="fa-solid fa-arrow-up" aria-hidden="true"></i>';
     btn.setAttribute('aria-label', 'Volver arriba');
     document.body.appendChild(btn);
     btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    // rAF para no disparar trabajo de layout en cada evento de scroll.
+    var visible = false;
+    var ticking = false;
     window.addEventListener('scroll', function () {
-      btn.classList.toggle('visible', window.scrollY > 400);
-    });
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        var show = window.scrollY > 400;
+        if (show !== visible) {
+          visible = show;
+          btn.classList.toggle('visible', show);
+        }
+        ticking = false;
+      });
+    }, { passive: true });
+
+    /* Flechas del teclado: scroll suave con el mismo scrollTo que usa el resto
+       del sitio. No sustituye al comportamiento nativo mas de lo necesario:
+       si el foco esta en un campo editable o en un control que ya capturo la
+       flecha, no hace nada. Un unico listener, registrado una sola vez porque
+       esta funcion se invoca una vez en cada rama de arranque. */
+    var kbTarget = null;   // destino acumulado mientras se mantiene pulsada
+    var kbReset = null;
+    function clearTimer() { if (kbReset) { clearTimeout(kbReset); kbReset = null; } }
+    // Descarta el destino acumulado: el usuario ha tomado el control.
+    function forget() { kbTarget = null; clearTimer(); }
+    // Igual que forget pero sin tocar el temporizador que la programme.
+    function dropTarget() { kbTarget = null; }
+    function initKeyboardScroll() {
+      // Si el usuario toma el control con rueda o tactil, se descarta el
+      // destino acumulado para no pelearnos con el scroll nativo.
+      window.addEventListener('wheel', forget, { passive: true });
+      window.addEventListener('touchstart', forget, { passive: true });
+
+      document.addEventListener('keydown', function (e) {
+        // Otro control (p. ej. la lista role="tablist") ya resolvio la flecha.
+        if (e.defaultPrevented) return;
+        if (e.altKey || e.ctrlKey || e.metaKey) return;   // atajos del navegador
+
+        var dir = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+        if (!dir) return;
+
+        var el = e.target && e.target.nodeType === 1 ? e.target : e.target && e.target.parentElement;
+        if (el && el.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"], [role="tablist"]')) return;
+        // Con el visor de imagenes abierto la pagina esta bloqueada.
+        if (document.documentElement.classList.contains('lb-lock')) return;
+
+        // Paso comodo: una fraccion de la pantalla, acotada para que no sea ni
+        // un salto brusco ni un avance imperceptible.
+        var step = Math.min(320, Math.max(90, Math.round(window.innerHeight * 0.12)));
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var base = kbTarget === null ? window.scrollY : kbTarget;
+        kbTarget = Math.max(0, Math.min(max, base + dir * step));
+
+        e.preventDefault();
+        window.scrollTo({ top: kbTarget, behavior: 'smooth' });
+
+        clearTimer();
+        kbReset = setTimeout(dropTarget, 140);
+      });
+
+      // Al soltar la tecla se reinicia el destino: la siguiente pulsacion
+      // parte de donde esta la pagina de verdad.
+      document.addEventListener('keyup', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') forget();
+      });
+    }
+    initKeyboardScroll();
   }
 
   // ===== EFFECTS =====
@@ -1436,6 +1921,8 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
 
   // ===== BLOG STATE =====
   var blogState = { page: 0, perPage: PER_PAGE, query: '' };
+  var blogSearchBound = false;
+  var panelsBound = false;
 
   function filteredPosts() {
     var q = blogState.query.toLowerCase().trim();
@@ -1489,6 +1976,8 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
   }
 
   function initBlogSearch() {
+    if (blogSearchBound) return;
+    blogSearchBound = true;
     document.addEventListener('input', function (e) {
       if (e.target.id === 'blog-search') {
         blogState.query = e.target.value;
@@ -1581,6 +2070,16 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     initFadeIn();
   }
 
+  // Los paneles de Comunidades/Experiencia se renderizan en tiempo de ejecución.
+  // MAIN_HTML se capturó antes de ese render, así que tras restaurar el DOM
+  // hay que repoblarlos o quedarían vacíos.
+  function initInteractivePanels() {
+    var comRoot = document.getElementById('communities-list');
+    if (comRoot && !comRoot.children.length) initCommunities();
+    var jobRoot = document.getElementById('jobs-list');
+    if (jobRoot && !jobRoot.children.length) initJobs();
+  }
+
   function restoreMainPage() {
     var app = document.getElementById('app');
     if (!app || MAIN_HTML === null) {
@@ -1590,6 +2089,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     app.innerHTML = MAIN_HTML;
     initFadeIn();
     initBlogSearch();
+    initInteractivePanels();
     var curTheme = document.documentElement.getAttribute('data-theme');
     if (curTheme) setTheme(curTheme);
     if (window.location.hash) {
@@ -1604,256 +2104,198 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     }
   }
 
-  // ===== COMMUNITIES INTERACTIVE PANEL =====
-  function initCommunities() {
-    try {
-    console.log('[COM] initCommunities started');
-    var data = typeof BLOGCV_COMMUNITIES !== 'undefined' ? BLOGCV_COMMUNITIES : [];
-    console.log('[COM] BLOGCV_COMMUNITIES:', JSON.stringify(data).substring(0,200));
-    console.log('[COM] data.length:', data ? data.length : 0);
-    var list = document.getElementById('communities-list');
-    var detail = document.getElementById('communities-detail-inner');
-    console.log('[COM] list element:', list ? 'found' : 'null');
-    console.log('[COM] detail element:', detail ? 'found' : 'null');
-    if (!list || !detail || !data.length) {
-      console.log('[COM] EARLY RETURN: list=' + !!list + ' detail=' + !!detail + ' data.length=' + (data ? data.length : 0));
-      return;
+  // ===== SHARED ACCORDION BEHAVIOUR =====
+  // Un unico patron para Comunidades y Experiencia: la cabecera siempre
+  // visible muestra la informacion principal y el cuerpo se despliega con la
+  // informacion secundaria. teclado: Enter/Espacio alterna, flechas recorren.
+  /* ------------------------------------------------------------------
+     LISTA + PANEL DE DETALLE (compartido por Experiencia y Comunidades)
+     Solo un elemento puede estar seleccionado a la vez. La lista usa
+     semantica de tabs: el paneldepende de la pestana seleccionada.
+     ------------------------------------------------------------------ */
+  function initHistoryList(listEl, detailEl, items, render) {
+    if (!listEl || !detailEl) return;
+    var current = 0;
+    var tabs = [];
+    // Los id se prefijan por seccion: 'hist-tab-0' se repetiria en las dos
+    // listas y aria-controls / aria-labelledby apuntarian al elemento equivocado.
+    var prefix = (detailEl.id || 'hist') + '-tab-';
+
+    function paint() {
+      for (var i = 0; i < items.length; i++) {
+        var t = tabs[i];
+        if (!t) continue;
+        var on = i === current;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+      }
+      detailEl.setAttribute('aria-labelledby', prefix + current);
+      detailEl.innerHTML = render(items[current], current);
+      // Re-dispara la entrada corta del panel en cada cambio.
+      detailEl.classList.remove('enter');
+      void detailEl.offsetWidth;
+      detailEl.classList.add('enter');
     }
 
-    var enabled = [];
-    for (var i = 0; i < data.length; i++) {
-      if (data[i].enabled !== false) enabled.push(data[i]);
+    function select(i, focus) {
+      if (!items.length) return;
+      current = Math.max(0, Math.min(items.length - 1, i));
+      paint();
+      if (focus && tabs[current]) tabs[current].focus();
     }
-    console.log('[COM] enabled communities:', enabled.length);
+
+    listEl.innerHTML = items.map(function (it, i) {
+      return '<button type="button" class="hist-item" role="tab" id="' + prefix + i + '"' +
+        ' aria-controls="' + detailEl.id + '" aria-selected="false" tabindex="-1"' +
+        ' data-index="' + i + '">' + it.rowHTML + '</button>';
+    }).join('');
+    tabs = Array.prototype.slice.call(listEl.querySelectorAll('.hist-item'));
+
+    listEl.addEventListener('click', function (e) {
+      var t = e.target.closest('.hist-item');
+      if (t) select(parseInt(t.getAttribute('data-index'), 10) || 0, false);
+    });
+
+    // Navegacion con teclado sobre la lista.
+    listEl.addEventListener('keydown', function (e) {
+      var k = e.key;
+      var i = current;
+      if (k === 'ArrowDown' || k === 'ArrowRight') { select(i + 1, true); }
+      else if (k === 'ArrowUp' || k === 'ArrowLeft') { select(i - 1, true); }
+      else if (k === 'Home') { select(0, true); }
+      else if (k === 'End') { select(items.length - 1, true); }
+      else return;
+      e.preventDefault();
+    });
+
+    // Primera entrada seleccionada para no mostrar un panel vacio.
+    select(0, false);
+  }
+
+  function groupList(title, icon, items) {
+    if (!items || !items.length) return '';
+    return '<div class="det-group"><h5>' + icon + title + '</h5><ul>' +
+      items.map(function (x) { return '<li><span>' + escapeHtml(x) + '</span></li>'; }).join('') +
+      '</ul></div>';
+  }
+
+  function tagList(tech) {
+    if (!tech || !tech.length) return '';
+    return '<div class="det-tags">' + tech.map(function (t) {
+      return '<span class="badge badge-sm badge-outline">' + escapeHtml(t) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  function initCommunities() {
+    var listEl = document.getElementById('communities-list');
+    var detailEl = document.getElementById('communities-detail');
+    var root = document.getElementById('communities-container');
+    if (!root) return;
+
+    var enabled = BLOGCV_COMMUNITIES.filter(function (c) { return c.enabled; });
+    enabled.sort(function (a, b) { return (b.from || '').localeCompare(a.from || ''); });
     if (!enabled.length) {
-      console.log('[COM] No enabled communities, returning');
+      listEl.innerHTML = '';
+      detailEl.innerHTML = '<div class="hist-empty">No hay comunidades registradas.</div>';
       return;
     }
 
     function communityLogo(c) {
-      if (c.logo) {
-        var s = getImg(c.logo);
-        return '<img src="' + s + '" class="w-10 h-10 object-contain" alt="' + (c.name || '') + '" loading="lazy"/>';
-      }
-      return '<svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
+      if (c.logo) return '<img src="' + escapeHtml(getImg(c.logo)) + '" alt="" loading="lazy">';
+      // Sin archivo de logo: icono generico para no dejar el hueco vacio.
+      return '<svg class="w-5 h-5" style="color: var(--fallback-p, oklch(var(--p)));" fill="none" viewBox="0 0 24 24" stroke="currentColor">' +
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
     }
 
-    function renderCommunityList() {
-      var html = enabled.map(function (c, idx) {
-        var acts = (c.activities || []).length;
-        var period = (c.from || '') + (c.to ? ' — ' + c.to : '');
-        return '<div class="panel-item card card-compact bg-base-200/70 shadow-sm rounded-xl p-4 flex flex-row items-center gap-3 transition-all" data-community="' + idx + '" role="tab" tabindex="0" aria-selected="false">' +
-          '<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">' + communityLogo(c) + '</div>' +
-          '<div class="flex-1 min-w-0"><h4 class="font-semibold text-sm truncate">' + (c.name || '') + '</h4>' +
-          '<p class="text-xs opacity-60 truncate">' + period + '</p></div>' +
-          '<span class="badge badge-ghost badge-sm shrink-0">' + acts + '</span></div>';
-      }).join('\n');
-      console.log('[COM] renderCommunityList produced HTML length:', html.length);
-      return html;
-    }
+    var items = enabled.map(function (c) {
+      var count = (c.activities || []).length;
+      var period = (c.from || '') + (c.to ? ' - ' + escapeHtml(c.to) : ' - Actualidad');
+      return {
+        data: c,
+        rowHTML:
+          '<span class="hist-period">' + period + '</span>' +
+          '<span class="hist-company">' + escapeHtml(c.name) + '</span>' +
+          (c.role ? '<span class="hist-position">' + escapeHtml(c.role) + '</span>' : '') +
+          '<span class="hist-count">' + count + ' ' + (count === 1 ? 'actividad' : 'actividades') + '</span>'
+      };
+    });
 
-    function showCommunity(index) {
-      console.log('[COM] showCommunity called with index:', index);
-      var c = enabled[index];
-      if (!c) { console.log('[COM] community not found at index', index); return; }
-      console.log('[COM] showing community:', c.name);
+    initHistoryList(listEl, detailEl, items, function (item) {
+      var c = item.data;
+      // Actividades agrupadas por ano: orden legible y compacto.
+      var byYear = {};
+      (c.activities || []).forEach(function (a) {
+        var y = a.year ? String(a.year) : '';
+        if (!byYear[y]) byYear[y] = [];
+        byYear[y].push(a);
+      });
+      var years = Object.keys(byYear).sort(function (a, b) { return b.localeCompare(a); });
 
-      var items = list.querySelectorAll('.panel-item');
-      for (var i = 0; i < items.length; i++) {
-        items[i].classList.toggle('active', parseInt(items[i].dataset.community) === index);
-        items[i].setAttribute('aria-selected', items[i].classList.contains('active'));
-      }
-
-      var acts = c.activities || [];
-      var period = (c.from || '') + (c.to ? ' — ' + c.to : '');
-
-      var timelineHtml = '';
-      if (acts.length) {
-        timelineHtml = acts.map(function (a, ai) {
-          return '<div class="timeline-h-item" data-activity="' + ai + '">' +
-            '<div class="timeline-h-marker"></div>' +
-            '<div class="timeline-h-card" data-activity="' + ai + '">' +
-            '<div class="timeline-h-year">' + (a.year || '') + '</div>' +
-            '<h5 class="font-semibold text-sm leading-tight mt-1">' + (a.title || '') + '</h5>' +
-            '<p class="text-xs opacity-60 mt-1 line-clamp-2">' + (a.description || '').substring(0, 100) + '</p>' +
-            '</div></div>';
-        }).join('\n');
-      }
-
-      var descFull = c.description || '';
-      var detailHtml =
-        '<div class="flex items-start gap-4 mb-6">' +
-        '<div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">' +
-        '<div class="w-8 h-8">' + communityLogo(c) + '</div></div>' +
-        '<div><h3 class="text-xl font-bold">' + (c.name || '') + '</h3>' +
-        '<p class="text-sm opacity-70 mt-1 leading-relaxed">' + descFull + '</p>' +
-        '<div class="flex flex-wrap gap-3 mt-2 text-xs font-mono opacity-60">' +
-        '<span><svg class="w-3.5 h-3.5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>' + period + '</span>' +
-        '<span><svg class="w-3.5 h-3.5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>' + acts.length + ' actividades registradas</span>' +
-        '</div></div></div>';
-
-      if (timelineHtml) {
-        detailHtml += '<div class="scroll-hint"><svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>Desliza para ver mas</div>' +
-          '<div class="timeline-h" id="community-timeline">' + timelineHtml + '</div>' +
-          '<div id="community-activity-detail" class="activity-detail mt-4"></div>';
-      } else {
-        detailHtml += '<p class="text-sm opacity-50 text-center py-8">Sin actividades registradas.</p>';
-      }
-
-      detail.innerHTML = detailHtml;
-      console.log('[COM] detail panel updated, HTML length:', detailHtml.length);
-
-      var cards = detail.querySelectorAll('.timeline-h-card');
-      console.log('[COM] timeline cards found:', cards.length);
-      for (var ci = 0; ci < cards.length; ci++) {
-        cards[ci].addEventListener('click', function () {
-          var ai = parseInt(this.dataset.activity);
-          showActivityDetail(index, ai);
-        });
-      }
-    }
-
-    function showActivityDetail(communityIdx, activityIdx) {
-      var c = enabled[communityIdx];
-      if (!c) return;
-      var a = (c.activities || [])[activityIdx];
-      if (!a) return;
-      var detailContainer = document.getElementById('community-activity-detail');
-      if (!detailContainer) return;
-
-      var cards = detailContainer.parentElement.querySelectorAll('.timeline-h-card');
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].classList.toggle('active', parseInt(cards[i].dataset.activity) === activityIdx);
-      }
-
-      detailContainer.innerHTML =
-        '<div class="card bg-base-300/50 border border-base-300/30 rounded-xl p-5 mt-2">' +
-        '<div class="flex items-center gap-2 mb-3">' +
-        '<span class="text-xs font-mono opacity-50">' + (a.year || '') + '</span>' +
+      return '<div class="det-head">' +
+          '<div class="det-icon">' + communityLogo(c) + '</div>' +
+          '<div><h3 class="det-title">' + escapeHtml(c.name) + '</h3>' +
+          (c.role ? '<div class="det-role">' + escapeHtml(c.role) + '</div>' : '') +
+          '<div class="det-period">' + escapeHtml(c.from || '') + (c.to ? ' - ' + escapeHtml(c.to) : ' - Actualidad') +
+          ' &middot; ' + (c.activities || []).length + ' actividades</div></div>' +
         '</div>' +
-        '<h5 class="font-semibold">' + (a.title || '') + '</h5>' +
-        '<p class="text-sm mt-2 opacity-80 leading-relaxed">' + (a.description || '') + '</p>' +
-        '</div>';
-    }
-
-    list.innerHTML = renderCommunityList();
-
-    list.addEventListener('click', function (e) {
-      var item = e.target.closest('.panel-item');
-      if (item) showCommunity(parseInt(item.dataset.community));
+        (c.description ? '<p class="det-lead">' + escapeHtml(c.description) + '</p>' : '') +
+        years.map(function (y) {
+          return '<div class="det-yeargroup">' + escapeHtml(y) + '</div>' +
+            '<div class="det-acts">' + byYear[y].map(function (a) {
+              return '<div class="det-act"><div class="det-act-title">' + escapeHtml(a.title) + '</div>' +
+                (a.description ? '<div class="det-act-desc">' + escapeHtml(a.description) + '</div>' : '') +
+                '</div>';
+            }).join('') + '</div>';
+        }).join('');
     });
-
-    list.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        var item = e.target.closest('.panel-item');
-        if (item) { e.preventDefault(); showCommunity(parseInt(item.dataset.community)); }
-      }
-    });
-
-    if (enabled.length > 0) showCommunity(0);
-    } catch(e) { console.error('[COM] Error:', e.message, e.stack); }
   }
 
-  // ===== JOBS INTERACTIVE PANEL =====
   function initJobs() {
-    var data = typeof BLOGCV_JOBS !== 'undefined' ? BLOGCV_JOBS : [];
-    var list = document.getElementById('jobs-list');
-    var detail = document.getElementById('jobs-detail-inner');
-    if (!list || !detail || !data.length) return;
+    var listEl = document.getElementById('jobs-list');
+    var detailEl = document.getElementById('jobs-detail');
+    var root = document.getElementById('jobs-container');
+    if (!root) return;
 
-    var enabled = [];
-    for (var i = 0; i < data.length; i++) {
-      if (data[i].enabled !== false) enabled.push(data[i]);
-    }
-    if (!enabled.length) return;
-
-    // Sort by 'from' descending (most recent first)
+    var enabled = BLOGCV_JOBS.filter(function (j) { return j.enabled; });
     enabled.sort(function (a, b) { return (b.from || '').localeCompare(a.from || ''); });
-
-    function jobIcon() {
-      return '<svg class="w-5 h-5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>';
+    if (!enabled.length) {
+      listEl.innerHTML = '';
+      detailEl.innerHTML = '<div class="hist-empty">No hay experiencia registrada.</div>';
+      return;
     }
 
-    function renderJobList() {
-      return enabled.map(function (j, idx) {
-        var period = (j.from || '') + (j.to && j.to !== j.from ? ' — ' + j.to : '');
-        return '<div class="panel-item card card-compact bg-base-100/70 shadow-sm rounded-xl p-4 flex flex-row items-center gap-3 transition-all" data-job="' + idx + '" role="tab" tabindex="0" aria-selected="false">' +
-          '<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">' + jobIcon() + '</div>' +
-          '<div class="flex-1 min-w-0"><h4 class="font-semibold text-sm truncate">' + (j.position || '') + '</h4>' +
-          '<p class="text-xs text-primary truncate">' + (j.company || '') + '</p></div>' +
-          '<span class="text-xs font-mono opacity-50 shrink-0">' + period + '</span></div>';
-      }).join('\n');
-    }
+    var items = enabled.map(function (j) {
+      return {
+        data: j,
+        rowHTML:
+          '<span class="hist-period">' + escapeHtml(j.from || '') + (j.to ? ' - ' + escapeHtml(j.to) : ' - Actualidad') + '</span>' +
+          '<span class="hist-company">' + escapeHtml(j.company) + '</span>' +
+          (j.position ? '<span class="hist-position">' + escapeHtml(j.position) + '</span>' : '')
+      };
+    });
 
-    function showJob(index) {
-      var j = enabled[index];
-      if (!j) return;
+    initHistoryList(listEl, detailEl, items, function (item) {
+      var j = item.data;
+      var out = '<div class="det-head"><div class="det-icon"><i class="fa-solid fa-briefcase text-lg"></i></div><div>' +
+        '<h3 class="det-title">' + escapeHtml(j.company) + '</h3>' +
+        (j.position ? '<div class="det-role">' + escapeHtml(j.position) + '</div>' : '') +
+        '<div class="det-period">' + escapeHtml(j.from || '') + (j.to ? ' - ' + escapeHtml(j.to) : ' - Actualidad') + '</div>' +
+        '</div></div>';
 
-      var items = list.querySelectorAll('.panel-item');
-      for (var i = 0; i < items.length; i++) {
-        items[i].classList.toggle('active', parseInt(items[i].dataset.job) === index);
-        items[i].setAttribute('aria-selected', items[i].classList.contains('active'));
-      }
+      if (j.summary) out += '<p class="det-lead">' + escapeHtml(j.summary) + '</p>';
+      out += tagList(j.technologies);
+      out += groupList('Responsabilidades', '<i class="fa-solid fa-list-check"></i>', j.responsibilities);
+      out += groupList('Implementaciones', '<i class="fa-solid fa-code"></i>', j.implementations);
+      out += groupList('Logros', '<i class="fa-solid fa-star"></i>', j.achievements);
 
-      var period = (j.from || '') + (j.to && j.to !== j.from ? ' — ' + j.to : '');
-      var techs = (j.technologies || []).map(function (t) {
-        return '<span class="badge badge-primary badge-sm">' + t + '</span>';
-      }).join(' ');
-
-      function bulletList(items, label, iconSvg) {
-        if (!items || !items.length) return '';
-        var listHtml = items.map(function (item) {
-          return '<li class="flex items-start gap-2 text-sm"><svg class="w-4 h-4 text-primary mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="opacity-80">' + item + '</span></li>';
-        }).join('\n');
-        return '<div class="card bg-base-300/30 border border-base-300/20 rounded-xl p-4 mt-4"><h5 class="font-semibold text-xs uppercase tracking-wider opacity-60 mb-2 flex items-center gap-1.5">' + iconSvg + label + '</h5><ul class="space-y-1.5">' + listHtml + '</ul></div>';
-      }
-
-      var respHtml = bulletList(j.responsibilities, 'Responsabilidades', '<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>');
-      var implHtml = bulletList(j.implementations, 'Implementaciones', '<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>');
-      var achHtml = bulletList(j.achievements, 'Logros', '<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>');
-
-      var detailHtml =
-        '<div class="flex items-start gap-4 mb-6">' +
-        '<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">' + jobIcon() + '</div>' +
-        '<div><h3 class="text-xl font-bold">' + (j.position || '') + '</h3>' +
-        '<p class="text-primary font-semibold">' + (j.company || '') + '</p>' +
-        '<div class="flex flex-wrap gap-3 mt-2 text-xs font-mono opacity-60">' +
-        '<span><svg class="w-3.5 h-3.5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>' + period + '</span>' +
-        '</div></div></div>' +
-        '<p class="text-sm opacity-80 leading-relaxed mb-4">' + (j.summary || '') + '</p>';
-
-      if (techs) {
-        detailHtml += '<div class="flex flex-wrap gap-1.5 mb-4">' + techs + '</div>';
-      }
-
-      detailHtml += respHtml + implHtml + achHtml;
-
-      // Gallery
       if (j.gallery && j.gallery.length) {
-        var galHtml = j.gallery.map(function (g) {
-          return '<img src="' + getImg(g) + '" class="rounded-lg shadow-sm w-full h-28 object-cover" loading="lazy"/>';
-        }).join('');
-        detailHtml += '<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6">' + galHtml + '</div>';
+        out += '<div class="det-group"><h5><i class="fa-solid fa-images"></i>Galería</h5>' +
+          '<div class="grid grid-cols-2 gap-2 sm:grid-cols-3">' + j.gallery.map(function (g) {
+            return '<img src="' + escapeHtml(g.src || g) + '" alt="' + escapeHtml(g.alt || '') + '" loading="lazy" class="rounded-lg w-full h-24 object-cover">';
+          }).join('') + '</div></div>';
       }
-
-      detail.innerHTML = detailHtml;
-    }
-
-    list.innerHTML = renderJobList();
-
-    list.addEventListener('click', function (e) {
-      var item = e.target.closest('.panel-item');
-      if (item) showJob(parseInt(item.dataset.job));
+      return out;
     });
-
-    list.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        var item = e.target.closest('.panel-item');
-        if (item) { e.preventDefault(); showJob(parseInt(item.dataset.job)); }
-      }
-    });
-
-    if (enabled.length > 0) showJob(0);
   }
 
   function initRouting() {
@@ -1887,6 +2329,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
       initScrollToTop();
       initMouseGlow();
       initFadeIn();
+      lightbox.init();
       return;
     }
     MAIN_HTML = document.getElementById('app') ? document.getElementById('app').innerHTML : null;
@@ -1900,6 +2343,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     initCommunities();
     initJobs();
     initRouting();
+    lightbox.init();
   });
 })();
 APPJS

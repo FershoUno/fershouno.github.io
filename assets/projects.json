@@ -1,6 +1,46 @@
 [
   {
     "enabled": true,
+    "title": "Pagina de ayuda para Forgejo NLUAGRM",
+    "year": "2026",
+    "description": "Implementación de una pagina web simple para brindar una guía para la creación de cuentas en el servidor GIT comunitario, esta plataforma esta desplegado en GitHub Pages utilizando un script en bash como generador de pagina web escrito con openCode.",
+    "image": "helpgit.png",
+    "video": "",
+    "github": "https://github.com/nlbol/helpgit",
+    "website": "https://help.git.nluagrm.org"
+  },
+  {
+    "enabled": true,
+    "title": "Jitsi Meet comunitario",
+    "year": "2026",
+    "description": "Implementación y administración de una plataforma de reuniones virtuales basada en Jitsi Meet para uso comunitario de grupos Linux y comunidades de software libre en Santa Cruz, Bolivia. Este servicio solo se habilita cuando se solicita su uso.",
+    "image": "jitsi-meet-self-host.png",
+    "video": "",
+    "github": "",
+    "website": "https://meet.nluagrm.org"
+  },
+  {
+    "enabled": true,
+    "title": "Repositorio local GIT Comunitario",
+    "year": "2026",
+    "description": "Repositorio local GIT utilizando Forgejo para centralizar y administrar una plataforma de control de versiones, algunas de las caracteristicas que se implementaron: WAF (cloudflare), Politicas de seguridad (Autenticación de doble factor obligatorio), validación manual de cuentas creadas (evita que los bots creen cuentas y carguen algun tipo de malware en el servidor).",
+    "image": "forgejo.png",
+    "video": "",
+    "github": "https://git.nluagrm.org/fershouno/forgejo",
+    "website": "https://git.nluagm.org"
+  },
+  {
+    "enabled": true,
+    "title": "PluriOS GUFW Profiles",
+    "year": "2026",
+    "description": "Paquete de perfiles de Firewall para Forzar la seguridad del ordenador y prevenir cualquier tipo de intrusión en la redes permitiendo únicamente la navegación anónima a través del protocolo de red Onión.",
+    "image": "plurios-gufw-profiles.png",
+    "video": "",
+    "github": "https://github.com/fershouno/plurios-gufw-profiles",
+    "website": "https://github.com/fershouno/plurios-gufw-profiles"
+  },
+  {
+    "enabled": true,
     "title": "PluriOS Live",
     "year": "2025",
     "description": "PluriOS Live es una herramienta que permite generar imágenes ISO del proyecto PluriOS de código abierto que busca estandarizar un escritorio Linux para Bolivia. La distribución cuenta con el respaldo de varias comunidades de software libre bolivianas, como Núcleo Linux Bolivia, y se beneficia de las ventajas del ecosistema Linux, como actualizaciones frecuentes y soporte comunitario.",
@@ -28,16 +68,6 @@
     "video": "",
     "github": "https://github.com/FershoUno/docker-images",
     "website": "https://hub.docker.com/u/fershouno"
-  },
-  {
-    "enabled": true,
-    "title": "Jitsi Meet comunitario",
-    "year": "2024",
-    "description": "Implementación y administración de una plataforma de reuniones virtuales basada en Jitsi Meet para uso comunitario de grupos Linux y comunidades de software libre en Santa Cruz, Bolivia. Este servicio solo se habilita cuando se solicita su uso.",
-    "image": "jitsi-meet-self-host.jpg",
-    "video": "",
-    "github": "",
-    "website": "https://meet.nucleolinux.duckdns.org"
   },
   {
     "enabled": true,

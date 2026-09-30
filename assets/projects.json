@@ -33,7 +33,7 @@
     "enabled": true,
     "title": "PluriOS GUFW Profiles",
     "year": "2026",
-    "description": "Paquete de perfiles de Firewall para Forzar la seguridad del ordenador y prevenir cualquier tipo de intrusión en la redes permitiendo únicamente la navegación anónima a través del protocolo de red Onión.",
+"description": "Conjunto de perfiles de Firewall para GUFW diseñados para mejorar la privacidad y seguridad de red en PluriOS, permitiendo aislar el sistema en redes públicas, bloquear conexiones entrantes y restringir el tráfico saliente, además de ofrecer configuraciones orientadas a trabajar con Tor.",
     "image": "plurios-gufw-profiles.png",
     "video": "",
     "github": "https://github.com/fershouno/plurios-gufw-profiles",

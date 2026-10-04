@@ -712,7 +712,7 @@ local d_title=$(jq_str title assets/donation.json | html_esc)
           <div class="donation-grid">
             <div class="donation-copy">${msg_html}
               <p class="text-sm font-semibold mt-6" id="donation-wallet-label">Dirección de la billetera (Binance)</p>
-              <code id="donation-wallet" class="badge badge-lg font-mono select-all break-all whitespace-normal mt-1" aria-labelledby="donation-wallet-label">${d_wallet}</code>
+              <code id="donation-wallet" class="badge badge-lg font-mono select-all break-all whitespace-normal h-auto py-1 mt-1" aria-labelledby="donation-wallet-label">${d_wallet}</code>
               <button type="button" class="btn btn-primary mt-4 w-fit" data-donation-copy>Copiar dirección</button>
               <p class="sr-only" role="status" aria-live="polite" data-donation-status></p>
             </div>

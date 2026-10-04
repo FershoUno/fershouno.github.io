@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "title": "Donaciones",
+  "message": [
+"Tu apoyo es bien recibido y significa mucho para mí. Cada donación me motiva a seguir creando proyectos, aprendiendo y compartiendo lo que hago con la comunidad. Si deseas contribuir y apoyar este trabajo, puedes hacerlo mediante Binance."
+  ],
+  "wallet": "TAbmSYVZMrru7wkMKysQA1eRnTy6jMFXMm",
+  "image": "donacion.jpg",
+  "image_alt": "Binance"
+}

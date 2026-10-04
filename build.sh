@@ -62,7 +62,7 @@ json_arr_enabled() {
 # VALIDATE ALL JSON FILES
 # =====================================================
 
-REQUIRED_JSON="settings.json profile.json projects.json jobs.json communities.json contacts.json"
+REQUIRED_JSON="settings.json profile.json projects.json jobs.json communities.json contacts.json donation.json"
 JSON_OK=1
 
 echo "  --- Validando archivos JSON ---"
@@ -139,6 +139,14 @@ TOTAL_COMMUNITIES=$(json_arr_enabled assets/communities.json)
 TOTAL_JOBS=$(json_arr_enabled assets/jobs.json)
 TOTAL_PROJECTS=$(json_arr_enabled assets/projects.json)
 TOTAL_CONTACTS=$(jq '[.social[] | select(.enabled != false and .url != "")] | length' assets/contacts.json 2>/dev/null || echo 0)
+# La sección Donación es una única entrada opcional: se muestra si el propio
+# JSON la habilita (enabled distinto de false) y tiene una dirección que copiar.
+DONATION_ENABLED=$(jq -r '(.enabled != false)' assets/donation.json 2>/dev/null || echo false)
+DONATION_WALLET=$(jq_str wallet assets/donation.json)
+TOTAL_DONATION=0
+if [ "$DONATION_ENABLED" = "true" ] && [ -n "$DONATION_WALLET" ]; then
+  TOTAL_DONATION=1
+fi
 POST_FILES=(assets/posts/*.md)
 TOTAL_POSTS=0
 for pf in "${POST_FILES[@]}"; do
@@ -195,6 +203,12 @@ validate_resources() {
       WARN_COUNT=$((WARN_COUNT + 1))
     fi
   done
+  # La imagen de la donación es opcional: si falta se usa el marcador, por lo
+  # que solo se avisa (nunca es un error que rompa la generación).
+  d_img=$(jq -r '.image // empty' assets/donation.json 2>/dev/null)
+  if [ -n "$d_img" ] && [ ! -f "assets/images/$d_img" ] && [ ! -f "assets/images/$(to_webp "$d_img")" ]; then
+    warn "Imagen de donación no encontrada: $d_img (se usará el marcador)"
+  fi
 
   # Validate posts
   for post in assets/posts/*.md; do
@@ -285,6 +299,7 @@ echo "const BLOGCV_PROJECTS = $(cat assets/projects.json);" >&3
 echo "const BLOGCV_JOBS = $(cat assets/jobs.json);" >&3
 echo "const BLOGCV_COMMUNITIES = $(cat assets/communities.json);" >&3
 echo "const BLOGCV_CONTACTS = $(cat assets/contacts.json);" >&3
+echo "const BLOGCV_DONATION = $(cat assets/donation.json);" >&3
 
 echo "const BLOGCV_POSTS = [" >&3
 FIRST=true
@@ -338,6 +353,9 @@ build_navbar() {
   fi
   if [ "$SHOW_JOBS" != "false" ] && [ "$TOTAL_JOBS" -gt 0 ]; then
     items="${items}<li><a href=\"#jobs\">Experiencia</a></li>"
+  fi
+  if [ "$TOTAL_DONATION" -gt 0 ]; then
+    items="${items}<li><a href=\"#donation\">Donación</a></li>"
   fi
   if [ "$SHOW_CONTACT" != "false" ] && [ "$TOTAL_CONTACTS" -gt 0 ]; then
     items="${items}<li><a href=\"#contact\">Contacto</a></li>"
@@ -615,6 +633,101 @@ JOBSEOF
 }
 
 build_jobs
+
+# =====================================================
+# GENERATE DONATION
+# =====================================================
+
+# Sección Donación. Todo el contenido sale de assets/donation.json:
+# enabled, title, message, wallet, image e image_alt. Si falta el wallet o el
+# JSON la deshabilita, la sección no se genera y tampoco aparece en el menú.
+# La imagen es opcional: si el archivo aún no está en assets/images/ se dibuja
+# un marcador con el mismo estilo, para no depender de un recurso ausente.
+build_donation() {
+  if [ "$TOTAL_DONATION" -eq 0 ]; then
+    if [ "$DONATION_ENABLED" = "true" ]; then
+      echo "  [INFO] Sección Donación sin dirección de billetera, no se genera"
+    else
+      echo "  [INFO] Sección Donación deshabilitada en donation.json"
+    fi
+    return
+  fi
+
+local d_title=$(jq_str title assets/donation.json | html_esc)
+  local d_wallet=$(jq_str wallet assets/donation.json | html_esc)
+  local d_image=$(jq_str image assets/donation.json)
+  local d_alt=$(jq_str image_alt assets/donation.json | html_esc)
+
+  [ -z "$d_title" ] && d_title="Donaciones"
+  [ -z "$d_alt" ] && d_alt="Binance"
+
+  echo "  [INFO] Generando sección Donación"
+
+  # El mensaje admite texto simple o una lista de parrafos, para poder separar
+  # las ideas sin repetir marcado. Todo pasa por html_esc.
+  local msg_html=""
+  local msg_kind=$(jq -r 'if (.message | type) == "array" then "array" else "string" end' assets/donation.json 2>/dev/null)
+  if [ "$msg_kind" = "array" ]; then
+    local first=1
+    while IFS= read -r para; do
+      [ -z "$para" ] && continue
+      if [ "$first" -eq 1 ]; then
+        msg_html="${msg_html}
+              <p class=\"text-lg leading-relaxed\">$(printf '%s' "$para" | html_esc)</p>"
+        first=0
+      else
+        msg_html="${msg_html}
+              <p class=\"text-base leading-relaxed mt-3\">$(printf '%s' "$para" | html_esc)</p>"
+      fi
+    done < <(jq -r '.message[]? // empty' assets/donation.json 2>/dev/null)
+  else
+    local one=$(printf '%s' "$(jq -r '.message // empty' assets/donation.json 2>/dev/null)" | html_esc)
+    [ -n "$one" ] && msg_html="
+              <p class=\"text-lg leading-relaxed\">${one}</p>"
+  fi
+
+# El nombre accesible va en el contenedor (role=img + aria-label), asi que
+  # la imagen interior es decorativa y no duplica el anuncio a los lectores de
+  # pantalla. El marcador se dibuja siempre debajo y la imagen real lo tapa al
+  # cargar; si el archivo falta o no se pudo convertir, se retira la imagen y
+  # se conserva el marcador en lugar de dejar un icono de imagen rota.
+  local logo_mark='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><rect x="9.5" y="9.5" width="5" height="5" transform="rotate(45 12 12)"/><rect x="9.05" y="2.71" width="5.9" height="5.9" transform="rotate(45 12 5.66)"/><rect x="2.71" y="9.05" width="5.9" height="5.9" transform="rotate(45 5.66 12)"/><rect x="15.29" y="9.05" width="5.9" height="5.9" transform="rotate(45 18.34 12)"/><rect x="9.05" y="15.29" width="5.9" height="5.9" transform="rotate(45 12 18.34)"/></svg>'
+  local figure=""
+  if [ -n "$d_image" ] && { [ -f "assets/images/$d_image" ] || [ -f "assets/images/$(to_webp "$d_image")" ]; }; then
+    local d_webp=$(to_webp "$d_image")
+    # Reutiliza el visor de imagenes del proyecto: al ser un .project-img-btn
+    # con data-full, el clic abre el mismo modal que usan las miniaturas de
+    # Proyectos, con su ESC, su cierre al pulsar fuera y su ajuste al viewport.
+    figure="<button type=\"button\" class=\"project-img-btn\" data-full=\"img/${d_webp}\" data-alt=\"${d_alt}\" aria-label=\"Ampliar imagen: ${d_alt}\">${logo_mark}<img src=\"img/${d_webp}\" alt=\"\" class=\"opacity-0 transition-opacity duration-300 rounded-box shadow-md\" loading=\"lazy\" decoding=\"async\" data-donation-img/></button>"
+  else
+    figure="${logo_mark}"
+  fi
+
+  cat >&3 << DONEOF
+  <section id="donation" class="py-20 px-4 bg-base-100" aria-label="Donación">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl font-bold mb-8 text-center fade-in">${d_title}</h2>
+      <div class="card bg-base-200 shadow-xl fade-in">
+        <div class="card-body">
+          <div class="donation-grid">
+            <div class="donation-copy">${msg_html}
+              <p class="text-sm font-semibold mt-6" id="donation-wallet-label">Dirección de la billetera (Binance)</p>
+              <code id="donation-wallet" class="badge badge-lg font-mono select-all break-all whitespace-normal mt-1" aria-labelledby="donation-wallet-label">${d_wallet}</code>
+              <button type="button" class="btn btn-primary mt-4 w-fit" data-donation-copy>Copiar dirección</button>
+              <p class="sr-only" role="status" aria-live="polite" data-donation-status></p>
+            </div>
+            <figure class="donation-figure" role="img" aria-label="${d_alt}" data-donation-logo>${figure}</figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+DONEOF
+
+  echo "  [OK] Sección Donación generada"
+}
+
+build_donation
 
 # =====================================================
 # GENERATE CONTACT
@@ -913,6 +1026,58 @@ footer .link {
   outline-offset: -2px;
   border-radius: 0.5rem;
 }
+
+/* === DONATION LAYOUT ===
+   Una sola rejilla para toda la seccion. En movil se apila sola y la imagen
+   queda debajo de la tarjeta; a partir de lg la imagen pasa a su propia
+   columna a la derecha y el texto se queda a la izquierda.
+
+   El alto de la imagen sale de su proporcion intrinseca (width + height:auto),
+   por lo que no puede deformarse. El ancho tiene tope, de modo que en 2K y 4K
+   la composicion no se estira: el contenedor sigue mandando con max-w-5xl. */
+.donation-grid {
+  display: grid;
+  gap: 1.5rem;
+  justify-items: center;
+}
+@media (min-width: 768px) {
+  .donation-grid { gap: 2rem; }
+}
+@media (min-width: 1024px) {
+  .donation-grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.donation-figure {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* min-height evita que la figura colapse entre la carga y el fallo. */
+  min-height: 8rem;
+  width: clamp(8.5rem, 42vw, 15rem);
+}
+.donation-figure > svg { width: 55%; height: auto; }
+/* relative (no absolute) para que la imagen siga dando la altura del bloque
+   cuando el marcador se retira: el alto nunca depende del SVG. */
+.donation-figure > img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.donation-figure .project-img-btn {
+  overflow: visible;
+}
+/* El zoom al pasar el raton es para miniaturas recortadas; aqui la imagen ya
+   se ve entera, asi que basta conpointer y el anillo de foco. */
+@media (hover: hover) {
+  .donation-figure .project-img-btn:hover img { transform: none; }
+}
+.donation-figure .project-img-btn:disabled { cursor: default; opacity: 1; }
 
 /* === IMAGE LIGHTBOX ===
    Interaccion unica: clic/tap sobre la imagen abre, clic/tap sobre la imagen
@@ -2073,6 +2238,107 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
   // Los paneles de Comunidades/Experiencia se renderizan en tiempo de ejecución.
   // MAIN_HTML se capturó antes de ese render, así que tras restaurar el DOM
   // hay que repoblarlos o quedarían vacíos.
+  // ---- Sección Donación: copiar la dirección de la billetera ----
+  // La dirección se lee del texto que la persona tiene delante, así lo que
+  // se copia es exactamente lo que se muestra, sin transformaciones.
+  function legacyCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  // Usa la API asíncrona del portapapeles y, si no está disponible o denies
+  // el permiso, recurre al método tradicional. Devuelve siempre un booleano:
+  // writeText resuelve con undefined, así que el valor se normaliza aquí.
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () {
+        return true;
+      }, function () {
+        return legacyCopy(text);
+      });
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+
+  function initDonation() {
+    // Imagen configurable: el marcador esta siempre debajo y la imagen real
+    // lo tapa al cargar. Si el archivo falta o no se pudo convertir, se retira
+    // la imagen y se conserva el marcador (nunca un icono de imagen rota).
+    var img = document.querySelector('[data-donation-img]');
+    if (img) {
+      // Al cargar, la imagen real tapa el marcador; si falla, se retira y el
+      // marcador queda en su lugar. Nunca queda una imagen rota.
+      var showImg = function () {
+        var mark = document.querySelector('[data-donation-logo] svg');
+        if (mark) mark.remove();
+        img.classList.remove('opacity-0');
+      };
+      var dropImg = function () {
+        img.remove();
+        // Sin imagen real no hay nada que ampliar: el boton deja de ser un
+        // disparador para que el clic no abra un modal vacio.
+        var t = document.querySelector('[data-donation-logo] .project-img-btn');
+        if (t) { t.removeAttribute('data-full'); t.disabled = true; }
+      };
+      if (img.complete) {
+        if (img.naturalWidth > 0) showImg(); else dropImg();
+      } else {
+        img.addEventListener('load', showImg);
+        img.addEventListener('error', dropImg);
+      }
+    }
+
+    var btn = document.querySelector('[data-donation-copy]');
+    var addr = document.getElementById('donation-wallet');
+    var status = document.querySelector('[data-donation-status]');
+    if (!btn || !addr || btn.dataset.donationReady) return;
+    btn.dataset.donationReady = '1';
+
+    var normal = btn.textContent.trim();
+    var timer = null;
+
+    function revert() {
+      if (timer) { clearTimeout(timer); timer = null; }
+      btn.textContent = normal;
+      btn.classList.remove('btn-success');
+      btn.classList.add('btn-primary');
+      if (status) status.textContent = '';
+    }
+
+    btn.addEventListener('click', function () {
+      var value = addr.textContent.trim();
+      if (!value) return;
+      var focused = document.activeElement;
+      if (timer) { clearTimeout(timer); timer = null; }
+      copyText(value).then(function (ok) {
+        var done = ok === true;
+        btn.textContent = done ? '¡Dirección copiada!' : 'No se pudo copiar';
+        // add/remove explicitos: toggle(name, undefined) alternaria en vez de
+        // quitar y dejaria el boton con el color del estado anterior.
+        btn.classList.toggle('btn-success', done);
+        btn.classList.toggle('btn-primary', !done);
+        // region aria-live: el cambio de texto del boton ya se ve, esto lo
+        // anuncia tambien a quien no ve el color del cambio.
+        if (status) status.textContent = btn.textContent;
+        timer = setTimeout(revert, 2600);
+        // el metodo tradicional mueve el foco al textarea auxiliar
+        if (focused && focused.focus) focused.focus();
+      });
+    });
+  }
+
   function initInteractivePanels() {
     var comRoot = document.getElementById('communities-list');
     if (comRoot && !comRoot.children.length) initCommunities();
@@ -2089,6 +2355,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     app.innerHTML = MAIN_HTML;
     initFadeIn();
     initBlogSearch();
+    initDonation();
     initInteractivePanels();
     var curTheme = document.documentElement.getAttribute('data-theme');
     if (curTheme) setTheme(curTheme);
@@ -2340,6 +2607,7 @@ cat > "$OUTPUT/js/app.js" << 'APPJS'
     initMouseGlow();
     initFadeIn();
     initBlogSearch();
+    initDonation();
     initCommunities();
     initJobs();
     initRouting();
@@ -2709,13 +2977,16 @@ echo ""
 echo "=============================================="
 echo "  VALIDACION COMPLETADA"
 echo "=============================================="
-echo "  JSON cargados correctamente:    6"
+echo "  JSON cargados correctamente:    7"
 echo "  Comunidades:                    ${TOTAL_COMMUNITIES}"
 echo "  Actividades:                    ${TOTAL_ACTIVITIES}"
 echo "  Experiencias laborales:         ${TOTAL_JOBS}"
 echo "  Proyectos:                      ${TOTAL_PROJECTS}"
 echo "  Posts:                          ${POST_COUNT}"
 echo "  Redes sociales:                 ${TOTAL_CONTACTS}"
+if [ "$TOTAL_DONATION" -gt 0 ]; then
+  echo "  Donación:                       activa"
+fi
 echo "----------------------------------------------"
 echo "  Imagenes convertidas:           ${IMG_TOTAL}"
 echo "  Videos procesados:              ${VID_TOTAL}"

@@ -61,6 +61,16 @@
   },
   {
     "enabled": true,
+    "title": "Microsocks en Docker",
+    "year": "2025",
+    "description": "Imagen Docker ligera basada en Alpine Linux que integra Microsocks para desplegar rápidamente un servidor proxy SOCKS5. Puede utilizarse para redirigir y gestionar tráfico de red, acceder a servicios desde diferentes entornos, realizar pruebas de conectividad y, dependiendo de la configuración y las restricciones de la red, sortear bloqueos o censura a nivel de red. Su diseño basado en contenedores facilita su despliegue, aislamiento y reutilización en distintos entornos.",
+    "image": "docker-microsocks.png",
+    "video": "",
+    "github": "https://github.com/FershoUno/docker-images/tree/main/microsocks",
+    "website": "https://hub.docker.com/r/fershouno/microsocks"
+  },
+  {
+    "enabled": true,
     "title": "Imágenes Docker",
     "year": "2025",
     "description": "Repositorios de imágenes Docker: CentOS Stream, Nginx y Apache.",
